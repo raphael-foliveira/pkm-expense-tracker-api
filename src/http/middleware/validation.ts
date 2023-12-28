@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, z } from 'zod';
 
-const validate = (key: 'body' | 'query' | 'headers') => {
+const validate = (key: 'body' | 'query' | 'headers' | 'params') => {
   return (schema: AnyZodObject) =>
     async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -23,3 +23,5 @@ export const validateBody = validate('body');
 export const validateQueryString = validate('query');
 
 export const validateHeaders = validate('headers');
+
+export const validateParams = validate('params');

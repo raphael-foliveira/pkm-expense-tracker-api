@@ -25,7 +25,7 @@ export class Expense {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @Column()
+  @Column({ type: 'double' })
   price: number;
 
   @ManyToOne(() => User, (user) => user.expenses)

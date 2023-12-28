@@ -10,7 +10,7 @@ export class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   findOneById(id: number) {
-    return this.repository.findOne({ where: { id } });
+    return this.repository.findOne({ where: { id }, relations: ['user'] });
   }
 
   find(filter: Partial<Expense>) {
@@ -18,9 +18,8 @@ export class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   async delete(id: number) {
-    const user = await this.findOneById(id);
-    if (!user) return null;
-    await this.repository.delete(id);
-    return user;
+    const expense = await this.findOneById(id);
+    if (!expense) return null;
+    return this.repository.remove(expense);
   }
 }

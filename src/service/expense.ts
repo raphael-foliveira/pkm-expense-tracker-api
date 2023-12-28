@@ -1,6 +1,6 @@
 import { Expense } from '../persistence/entitites/expense';
 import { CreateExpenseDto, UpdateExpenseDto } from './dto/expense';
-import { NotFoundError } from './errors/common';
+import { ForbiddenError, NotFoundError } from './errors/common';
 import { ExpenseRepository, UserRepository } from './interfaces/repository';
 
 export class ExpenseService {
@@ -40,7 +40,14 @@ export class ExpenseService {
     return this.expenseRepository.find(filter);
   }
 
-  async delete(id: number) {
+  async delete(id: number, userId: number) {
+    const expenseToDelete = await this.expenseRepository.findOneById(id);
+    if (!expenseToDelete) {
+      throw new NotFoundError('Expense not found');
+    }
+    if (expenseToDelete.user.id !== userId) {
+      throw new ForbiddenError('This expense does not belong to this user');
+    }
     return this.expenseRepository.delete(id);
   }
 

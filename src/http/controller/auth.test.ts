@@ -7,27 +7,29 @@ import { testDataSource } from '../../persistence/data-source';
 import { AuthService } from '../../service/auth';
 import { signupDtoFactory } from '../../stubs/auth';
 import { getApp } from '../server';
+import { UserService } from '../../service/user';
 
 describe('AuthController', () => {
   let app: Express;
-  // let userRepository: Repository<User>;
   let request: TestAgent<supertest.Test>;
   let authService: AuthService;
+  let userService: UserService;
   let container: DIContainer;
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    app = getApp(testDataSource);
+    request = supertest.default(app);
     const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
     container = DIContainer.getInstance(testDataSource, {
       accessTokenSecret: ACCESS_TOKEN_SECRET!,
       refreshTokenSecret: REFRESH_TOKEN_SECRET!,
     });
     authService = container.resolveAuthService();
+    userService = container.resolveUserService();
   });
 
   beforeEach(async () => {
     await testDataSource.initialize();
-    app = getApp(testDataSource);
-    request = supertest.default(app);
   });
 
   afterEach(async () => {

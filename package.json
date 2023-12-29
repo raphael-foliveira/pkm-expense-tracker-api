@@ -6,7 +6,7 @@
     "build": "tsc",
     "start": "./dist/index.js",
     "dev": "nodemon ./src/index.ts",
-    "test": "NODE_ENV='test' jest",
+    "test": "jest",
     "lint": "eslint . --ext .ts --fix"
   },
   "keywords": [],

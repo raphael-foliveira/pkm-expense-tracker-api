@@ -1,11 +1,19 @@
 import { User } from '../../../persistence/entitites/user';
 
-export interface UserResponseDto
-  extends Omit<User, 'password' | 'refreshToken' | 'id'> {}
+export interface UserResponseDto {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
 
 export class UserMapper {
   static toResponseDto(user: User): UserResponseDto {
-    const { id, password, refreshToken, expenses, ...userResponseDto } = user;
-    return userResponseDto;
+    return {
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
   }
 }

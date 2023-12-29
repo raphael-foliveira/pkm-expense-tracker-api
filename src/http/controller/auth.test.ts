@@ -1,13 +1,16 @@
-import 'dotenv/config';
+import { config } from 'dotenv';
+config({ path: './.env.test' });
 import { Express } from 'express';
 import * as supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 import { DIContainer } from '../../di/container';
-import { testDataSource } from '../../persistence/data-source';
+import { dataSource } from '../../persistence/data-source';
 import { AuthService } from '../../service/auth';
+import { UserService } from '../../service/user';
 import { signupDtoFactory } from '../../stubs/auth';
 import { getApp } from '../server';
-import { UserService } from '../../service/user';
+
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 describe('AuthController', () => {
   let app: Express;
@@ -17,10 +20,9 @@ describe('AuthController', () => {
   let container: DIContainer;
 
   beforeAll(async () => {
-    app = getApp(testDataSource);
+    app = getApp(dataSource);
     request = supertest.default(app);
-    const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
-    container = DIContainer.getInstance(testDataSource, {
+    container = DIContainer.getInstance(dataSource, {
       accessTokenSecret: ACCESS_TOKEN_SECRET!,
       refreshTokenSecret: REFRESH_TOKEN_SECRET!,
     });
@@ -29,13 +31,17 @@ describe('AuthController', () => {
   });
 
   beforeEach(async () => {
-    await testDataSource.initialize();
+    await dataSource.initialize();
   });
 
   afterEach(async () => {
-    await testDataSource.destroy();
+    try {
+      await dataSource.query('DELETE FROM public.expense WHERE id > 0');
+      await dataSource.query('DELETE FROM public.user WHERE id > 0');
+    } finally {
+      await dataSource.destroy();
+    }
   });
-
   describe('signup', () => {
     it('should return 201 with tokens when signup is successful', async () => {
       const signupPayload = {
@@ -104,10 +110,13 @@ describe('AuthController', () => {
 
   describe('refreshAccessToken', () => {
     it('should return 201 with new access token when refresh token is valid', async () => {
-      jest.useFakeTimers();
       const fakeUser = signupDtoFactory();
       const { refreshToken, accessToken } = await authService.signup(fakeUser);
-      jest.advanceTimersByTime(1000 * 60 * 60);
+      const jwtService = container.resolveJwtService();
+      const verifyRefreshTokenSpy = jest.spyOn(
+        jwtService,
+        'verifyRefreshToken',
+      );
 
       const { status, body } = await request
         .post('/auth/refresh-token')
@@ -115,8 +124,7 @@ describe('AuthController', () => {
 
       expect(status).toBe(201);
       expect(body.accessToken).toBeDefined();
-      expect(body.accessToken).not.toEqual(accessToken);
-      jest.clearAllTimers();
+      expect(verifyRefreshTokenSpy).toHaveBeenCalledWith(refreshToken);
     });
   });
 

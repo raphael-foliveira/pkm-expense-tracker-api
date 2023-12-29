@@ -25,13 +25,16 @@ export class Expense {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @Column({ type: 'double' })
+  @Column({ type: 'float' })
   price: number;
 
-  @ManyToOne(() => User, (user) => user.expenses)
+  @ManyToOne(() => User, (user) => user.expenses, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   user: User;
 
-  @Column(NODE_ENV === 'test' ? 'datetime' : '')
+  @Column()
   date: Date;
 
   @Column()

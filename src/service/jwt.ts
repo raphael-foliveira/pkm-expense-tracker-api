@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from './types/jwt-payload';
+import { InvalidTokenError } from './errors/jwt';
 
 interface Secrets {
   accessToken: string;
@@ -29,15 +30,18 @@ export class JwtService {
   }
 
   async verifyAccessToken(token: string) {
-    return jwt.verify(token, this.secrets.accessToken) as JwtPayload;
+    try {
+      return jwt.verify(token, this.secrets.accessToken) as JwtPayload;
+    } catch {
+      throw new InvalidTokenError();
+    }
   }
 
   async verifyRefreshToken(token: string) {
-    return jwt.verify(token, this.secrets.refreshToken) as JwtPayload;
-  }
-
-  async refreshAccessToken(refreshToken: string) {
-    const payload = await this.verifyRefreshToken(refreshToken);
-    return this.signAccessToken(payload);
+    try {
+      return jwt.verify(token, this.secrets.refreshToken) as JwtPayload;
+    } catch {
+      throw new InvalidTokenError();
+    }
   }
 }

@@ -14,6 +14,7 @@ services:
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
       NODE_ENV: ${NODE_ENV}
       POSTGRES_HOST: database
+      POSTGRES_PORT: ${POSTGRES_PORT}
     volumes:
       - ./src:/app/src
 
@@ -25,3 +26,12 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - '5432:5432'
+
+  test_database:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: test
+    ports:
+      - '5433:5432'

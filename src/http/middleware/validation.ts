@@ -10,7 +10,7 @@ const validate = (key: 'body' | 'query' | 'headers' | 'params') => {
       } catch (error) {
         if (error instanceof z.ZodError) {
           const message = JSON.parse(error.message);
-          return res.status(400).json({ message });
+          return res.status(400).json(message);
         }
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });

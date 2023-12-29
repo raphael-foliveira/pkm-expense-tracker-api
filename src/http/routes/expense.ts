@@ -1,14 +1,10 @@
 import { Router } from 'express';
-import {
-  validateBody,
-  validateHeaders,
-  validateParams,
-} from '../middleware/validation';
 import { CreateExpenseSchema } from '../schemas/expense';
 import { useHandler } from '../helpers/handler';
 import { AuthorizationSchema } from '../schemas/auth';
 import { IdParamSchema } from '../schemas/common';
 import { expenseController } from '../controller/expense';
+import { validate } from '../middleware/validation';
 
 export const expenseRoutes = () => {
   const router = Router();
@@ -17,17 +13,17 @@ export const expenseRoutes = () => {
     .route('/')
     .get(useHandler(expenseController.find))
     .post(
-      validateHeaders(AuthorizationSchema),
-      validateBody(CreateExpenseSchema),
+      validate.headers(AuthorizationSchema),
+      validate.body(CreateExpenseSchema),
       useHandler(expenseController.create),
     );
 
   router
     .route('/:id')
-    .all(validateParams(IdParamSchema))
+    .all(validate.params(IdParamSchema))
     .get(useHandler(expenseController.findOne))
     .delete(
-      validateHeaders(AuthorizationSchema),
+      validate.headers(AuthorizationSchema),
       useHandler(expenseController.remove),
     );
 

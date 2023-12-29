@@ -1,44 +1,44 @@
 import { Router } from 'express';
 import { authController } from '../controller/auth';
 import { useHandler } from '../helpers/handler';
-import { validateBody, validateHeaders } from '../middleware/validation';
 import {
   AuthorizationSchema,
   LoginSchema,
   RefreshTokenSchema,
   SignupSchema,
 } from '../schemas/auth';
+import { validate } from '../middleware/validation';
 
 export const authRoutes = () => {
   const router = Router();
 
   router.post(
     '/signup',
-    validateBody(SignupSchema),
+    validate.body(SignupSchema),
     useHandler(authController.signup),
   );
 
   router.post(
     '/login',
-    validateBody(LoginSchema),
+    validate.body(LoginSchema),
     useHandler(authController.login),
   );
 
   router.get(
     '/logout',
-    validateHeaders(AuthorizationSchema),
+    validate.headers(AuthorizationSchema),
     useHandler(authController.logout),
   );
 
   router.post(
     '/refresh-token',
-    validateBody(RefreshTokenSchema),
+    validate.body(RefreshTokenSchema),
     useHandler(authController.refreshAccessToken),
   );
 
   router.get(
     '/verify',
-    validateHeaders(AuthorizationSchema),
+    validate.headers(AuthorizationSchema),
     useHandler(authController.verify),
   );
 

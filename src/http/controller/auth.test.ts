@@ -10,6 +10,7 @@ import { AuthService } from '../../service/auth';
 import { UserService } from '../../service/user';
 import { signupDtoFactory } from '../../stubs/auth';
 import { getApp } from '../server';
+import { deleteTables, truncateTables } from '../../persistence/helpers';
 
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
@@ -33,25 +34,16 @@ describe('AuthController', () => {
   });
 
   afterEach(async () => {
-    await dataSource.query('DELETE FROM public.expense WHERE id > 0');
-    await dataSource.query('DELETE FROM public.user WHERE id > 0');
+    await truncateTables();
   });
 
   afterAll(async () => {
-    await dataSource.query('DROP TABLE IF EXISTS public.expense CASCADE');
-    await dataSource.query('DROP TABLE IF EXISTS public.user CASCADE');
     await dataSource.destroy();
   });
 
   describe('signup', () => {
     it('should return 201 with tokens when signup is successful', async () => {
-      const signupPayload = {
-        email: 'test@test.com',
-        firstName: 'test',
-        lastName: 'test',
-        username: 'test',
-        password: '123123123',
-      };
+      const signupPayload = signupDtoFactory();
 
       const { status, body } = await request
         .post('/auth/signup')

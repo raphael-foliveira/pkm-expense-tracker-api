@@ -1,12 +1,24 @@
-import { DataSource } from 'typeorm';
+import { dataSource } from './data-source';
 
-export const truncateTables = (dataSource: DataSource) => {
+export const deleteTables = () => {
   const entities = dataSource.entityMetadatas;
 
   return Promise.all(
-    entities.map(async (entity) => {
+    entities.map((entity) => {
       const repository = dataSource.getRepository(entity.name);
-      await repository.query(`DROP TABLE public.${entity.tableName} CASCADE`);
+      return repository.query(
+        `DROP TABLE IF EXISTS public.${entity.tableName} CASCADE`,
+      );
+    }),
+  );
+};
+
+export const truncateTables = () => {
+  const entities = dataSource.entityMetadatas;
+  return Promise.all(
+    entities.map((entity) => {
+      const repository = dataSource.getRepository(entity.name);
+      return repository.query(`DELETE FROM public.${entity.tableName} CASCADE`);
     }),
   );
 };

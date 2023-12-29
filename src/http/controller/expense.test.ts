@@ -75,7 +75,6 @@ describe('ExpenseController', () => {
       const userDto = signupDtoFactory();
       const newUser = await authService.signup(userDto);
       const user = await userService.findOneByEmail(userDto.email);
-      console.log({ user, newUser });
 
       await Promise.all(
         expensesDto.map((expense) => expenseService.create(expense, user!.id!)),

@@ -38,6 +38,8 @@ describe('AuthController', () => {
   });
 
   afterAll(async () => {
+    await dataSource.query('DROP TABLE IF EXISTS public.expense CASCADE');
+    await dataSource.query('DROP TABLE IF EXISTS public.user CASCADE');
     await dataSource.destroy();
   });
 

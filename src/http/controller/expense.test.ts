@@ -26,6 +26,7 @@ describe('ExpenseController', () => {
   let container: DIContainer;
 
   beforeAll(async () => {
+    await dataSource.initialize();
     app = getApp(dataSource);
     request = supertest.default(app);
     container = DIContainer.getInstance(dataSource, {
@@ -37,17 +38,13 @@ describe('ExpenseController', () => {
     userService = container.resolveUserService();
   });
 
-  beforeEach(async () => {
-    await dataSource.initialize();
+  afterEach(async () => {
+    await dataSource.query('DELETE FROM public.expense WHERE id > 0');
+    await dataSource.query('DELETE FROM public.user WHERE id > 0');
   });
 
-  afterEach(async () => {
-    try {
-      await dataSource.query('DELETE FROM public.expense WHERE id > 0');
-      await dataSource.query('DELETE FROM public.user WHERE id > 0');
-    } finally {
-      await dataSource.destroy();
-    }
+  afterAll(async () => {
+    await dataSource.destroy();
   });
 
   describe('create', () => {

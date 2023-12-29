@@ -9,8 +9,6 @@ import {
 } from 'typeorm';
 import { User } from './user';
 
-const { NODE_ENV } = process.env;
-
 @Entity()
 export class Expense {
   @PrimaryGeneratedColumn()

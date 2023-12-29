@@ -4,33 +4,23 @@ config({ path: './.env.test' });
 import { Express } from 'express';
 import * as supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
-import { DIContainer } from '../../di/container';
-import { dataSource } from '../../persistence/data-source';
-import { AuthService } from '../../service/auth';
-import { UserService } from '../../service/user';
 import { signupDtoFactory } from '../../stubs/auth';
 import { getApp } from '../server';
 import { deleteTables, truncateTables } from '../../persistence/helpers';
+import { dataSource } from '../../persistence/data-source';
+import { authService } from '../../service/auth';
+import { jwtService } from '../../service/jwt';
 
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 describe('AuthController', () => {
   let app: Express;
   let request: TestAgent<supertest.Test>;
-  let authService: AuthService;
-  let userService: UserService;
-  let container: DIContainer;
 
   beforeAll(async () => {
     await dataSource.initialize();
-    app = getApp(dataSource);
+    app = getApp();
     request = supertest.default(app);
-    container = DIContainer.getInstance(dataSource, {
-      accessTokenSecret: ACCESS_TOKEN_SECRET!,
-      refreshTokenSecret: REFRESH_TOKEN_SECRET!,
-    });
-    authService = container.resolveAuthService();
-    userService = container.resolveUserService();
   });
 
   afterEach(async () => {
@@ -104,8 +94,7 @@ describe('AuthController', () => {
   describe('refreshAccessToken', () => {
     it('should return 201 with new access token when refresh token is valid', async () => {
       const fakeUser = signupDtoFactory();
-      const { refreshToken, accessToken } = await authService.signup(fakeUser);
-      const jwtService = container.resolveJwtService();
+      const { refreshToken } = await authService.signup(fakeUser);
       const verifyRefreshTokenSpy = jest.spyOn(
         jwtService,
         'verifyRefreshToken',

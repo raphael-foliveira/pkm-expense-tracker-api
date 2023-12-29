@@ -1,33 +1,46 @@
 import { Request, Response } from 'express';
-import { AuthService } from '../../service/auth';
-import { UserMapper } from './mappers/user';
+import { userMapper } from './mappers/user';
+import { authService } from '../../service/auth';
 
-export class AuthController {
-  constructor(private service: AuthService) {}
+const signup = async ({ body }: Request, res: Response) => {
+  const tokens = await authService.signup(body);
+  return res.status(201).json(tokens);
+};
 
-  async signup({ body }: Request, res: Response) {
-    const tokens = await this.service.signup(body);
-    return res.status(201).json(tokens);
-  }
+const login = async ({ body }: Request, res: Response) => {
+  const tokens = await authService.login(body);
+  return res.status(200).json(tokens);
+};
 
-  async login({ body }: Request, res: Response) {
-    const tokens = await this.service.login(body);
-    return res.status(200).json(tokens);
-  }
+const logout = async (
+  { headers: { authorization } }: Request,
+  res: Response,
+) => {
+  await authService.logout(authorization!);
+  return res.status(200).json({ message: 'Logout successful' });
+};
 
-  async logout({ headers: { authorization } }: Request, res: Response) {
-    await this.service.logout(authorization!);
-    return res.status(200).json({ message: 'Logout successful' });
-  }
+const refreshAccessToken = async (
+  { body: { refreshToken } }: Request,
+  res: Response,
+) => {
+  const tokens = await authService.refreshAccessToken(refreshToken);
+  return res.status(201).json(tokens);
+};
 
-  async refreshAccessToken({ body: { refreshToken } }: Request, res: Response) {
-    const tokens = await this.service.refreshAccessToken(refreshToken);
-    return res.status(201).json(tokens);
-  }
+const verify = async (
+  { headers: { authorization } }: Request,
+  res: Response,
+) => {
+  const user = await authService.verifyAccessToken(authorization!);
+  const userResponseDto = userMapper.toResponseDto(user);
+  return res.status(200).json(userResponseDto);
+};
 
-  async verify({ headers: { authorization } }: Request, res: Response) {
-    const user = await this.service.verifyAccessToken(authorization!);
-    const userResponseDto = UserMapper.toResponseDto(user);
-    return res.status(200).json(userResponseDto);
-  }
-}
+export const authController = {
+  signup,
+  login,
+  logout,
+  refreshAccessToken,
+  verify,
+};

@@ -2,46 +2,50 @@ import jwt from 'jsonwebtoken';
 import { JwtPayload } from './types/jwt-payload';
 import { InvalidTokenError } from './errors/jwt';
 
-interface Secrets {
-  accessToken: string;
-  refreshToken: string;
-}
+const secrets = {
+  accessToken: process.env.ACCESS_TOKEN_SECRET!,
+  refreshToken: process.env.REFRESH_TOKEN_SECRET!,
+};
 
-export class JwtService {
-  constructor(private secrets: Secrets) {}
+const signAccessToken = async (payload: JwtPayload) => {
+  return jwt.sign(payload, secrets.accessToken, {
+    expiresIn: '4h',
+  });
+};
 
-  async signAccessToken(payload: JwtPayload) {
-    return jwt.sign(payload, this.secrets.accessToken, {
-      expiresIn: '4h',
-    });
+const signRefreshToken = async (payload: JwtPayload) => {
+  return jwt.sign(payload, secrets.refreshToken, { expiresIn: '120h' });
+};
+
+const generateTokens = async (payload: JwtPayload) => {
+  const accessToken = await signAccessToken(payload);
+  const refreshToken = await signRefreshToken(payload);
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
+const verifyAccessToken = async (token: string) => {
+  try {
+    return jwt.verify(token, secrets.accessToken) as JwtPayload;
+  } catch {
+    throw new InvalidTokenError();
   }
+};
 
-  async signRefreshToken(payload: JwtPayload) {
-    return jwt.sign(payload, this.secrets.refreshToken, { expiresIn: '120h' });
+const verifyRefreshToken = async (token: string) => {
+  try {
+    return jwt.verify(token, secrets.refreshToken) as JwtPayload;
+  } catch {
+    throw new InvalidTokenError();
   }
+};
 
-  async generateTokens(payload: JwtPayload) {
-    const accessToken = await this.signAccessToken(payload);
-    const refreshToken = await this.signRefreshToken(payload);
-    return {
-      accessToken,
-      refreshToken,
-    };
-  }
-
-  async verifyAccessToken(token: string) {
-    try {
-      return jwt.verify(token, this.secrets.accessToken) as JwtPayload;
-    } catch {
-      throw new InvalidTokenError();
-    }
-  }
-
-  async verifyRefreshToken(token: string) {
-    try {
-      return jwt.verify(token, this.secrets.refreshToken) as JwtPayload;
-    } catch {
-      throw new InvalidTokenError();
-    }
-  }
-}
+export const jwtService = {
+  signAccessToken,
+  signRefreshToken,
+  generateTokens,
+  verifyAccessToken,
+  verifyRefreshToken,
+};

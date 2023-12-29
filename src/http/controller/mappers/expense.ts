@@ -1,5 +1,5 @@
 import { Expense } from '../../../persistence/entitites/expense';
-import { UserMapper, UserResponseDto } from './user';
+import { userMapper, UserResponseDto } from './user';
 
 export interface ExpenseResponseDto {
   price: number;
@@ -9,17 +9,19 @@ export interface ExpenseResponseDto {
   user?: UserResponseDto;
 }
 
-export class ExpenseMapper {
-  static toResponseDto(expense: Expense): ExpenseResponseDto {
-    const dto: ExpenseResponseDto = {
-      price: expense.price,
-      description: expense.description,
-      date: expense.date,
-      createdAt: expense.createdAt!,
-    };
-    if (expense.user) {
-      dto.user = UserMapper.toResponseDto(expense.user);
-    }
-    return dto;
+const toResponseDto = (expense: Expense): ExpenseResponseDto => {
+  const dto: ExpenseResponseDto = {
+    price: expense.price,
+    description: expense.description,
+    date: expense.date,
+    createdAt: expense.createdAt!,
+  };
+  if (expense.user) {
+    dto.user = userMapper.toResponseDto(expense.user);
   }
-}
+  return dto;
+};
+
+export const expenseMapper = {
+  toResponseDto,
+};

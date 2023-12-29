@@ -7,13 +7,15 @@ export interface UserResponseDto {
   lastName: string;
 }
 
-export class UserMapper {
-  static toResponseDto(user: User): UserResponseDto {
-    return {
-      username: user.username,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    };
-  }
-}
+const toResponseDto = (user: User): UserResponseDto => {
+  return {
+    username: user.username,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  };
+};
+
+export const userMapper = {
+  toResponseDto,
+};

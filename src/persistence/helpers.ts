@@ -1,24 +1,19 @@
 import { dataSource } from './data-source';
 
-export const deleteTables = () => {
+const runQueryForAllEntities = async (query: string) => {
   const entities = dataSource.entityMetadatas;
+  for (const entity of entities) {
+    const repository = dataSource.getRepository(entity.name);
+    const results = await repository.query(
+      query.replace('?', entity.tableName),
+    );
+  }
+};
 
-  return Promise.all(
-    entities.map((entity) => {
-      const repository = dataSource.getRepository(entity.name);
-      return repository.query(
-        `DROP TABLE IF EXISTS public.${entity.tableName} CASCADE`,
-      );
-    }),
-  );
+export const deleteTables = () => {
+  return runQueryForAllEntities(`DROP TABLE IF EXISTS public.? CASCADE`);
 };
 
 export const truncateTables = () => {
-  const entities = dataSource.entityMetadatas;
-  return Promise.all(
-    entities.map((entity) => {
-      const repository = dataSource.getRepository(entity.name);
-      return repository.query(`DELETE FROM public.${entity.tableName} CASCADE`);
-    }),
-  );
+  return runQueryForAllEntities(`DELETE FROM public.? CASCADE`);
 };

@@ -13,7 +13,6 @@ export const errorHandlingMiddleware: ErrorRequestHandler = (
     status = error.status;
     message = error.message;
   }
-  console.log(error);
   return res.status(status).json({
     status,
     message,

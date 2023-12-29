@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { ExpenseController } from '../controller/expense';
 import {
   validateBody,
   validateHeaders,
@@ -9,26 +8,27 @@ import { CreateExpenseSchema } from '../schemas/expense';
 import { useHandler } from '../helpers/handler';
 import { AuthorizationSchema } from '../schemas/auth';
 import { IdParamSchema } from '../schemas/common';
+import { expenseController } from '../controller/expense';
 
-export const expenseRoutes = (controller: ExpenseController) => {
+export const expenseRoutes = () => {
   const router = Router();
 
   router
     .route('/')
-    .get(useHandler((req, res, next) => controller.find(req, res)))
+    .get(useHandler(expenseController.find))
     .post(
       validateHeaders(AuthorizationSchema),
       validateBody(CreateExpenseSchema),
-      useHandler((req, res, next) => controller.create(req, res)),
+      useHandler(expenseController.create),
     );
 
   router
     .route('/:id')
     .all(validateParams(IdParamSchema))
-    .get(useHandler((req, res, next) => controller.findOne(req, res)))
+    .get(useHandler(expenseController.findOne))
     .delete(
       validateHeaders(AuthorizationSchema),
-      useHandler((req, res, next) => controller.delete(req, res)),
+      useHandler(expenseController.remove),
     );
 
   return router;

@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { AuthController } from '../controller/auth';
+import { authController } from '../controller/auth';
+import { useHandler } from '../helpers/handler';
 import { validateBody, validateHeaders } from '../middleware/validation';
 import {
   AuthorizationSchema,
@@ -7,39 +8,38 @@ import {
   RefreshTokenSchema,
   SignupSchema,
 } from '../schemas/auth';
-import { useHandler } from '../helpers/handler';
 
-export const authRoutes = (controller: AuthController) => {
+export const authRoutes = () => {
   const router = Router();
 
   router.post(
     '/signup',
     validateBody(SignupSchema),
-    useHandler((req, res, next) => controller.signup(req, res)),
+    useHandler(authController.signup),
   );
 
   router.post(
     '/login',
     validateBody(LoginSchema),
-    useHandler((req, res, next) => controller.login(req, res)),
+    useHandler(authController.login),
   );
 
   router.get(
     '/logout',
     validateHeaders(AuthorizationSchema),
-    useHandler((req, res, next) => controller.logout(req, res)),
+    useHandler(authController.logout),
   );
 
   router.post(
     '/refresh-token',
     validateBody(RefreshTokenSchema),
-    useHandler((req, res, next) => controller.refreshAccessToken(req, res)),
+    useHandler(authController.refreshAccessToken),
   );
 
   router.get(
     '/verify',
     validateHeaders(AuthorizationSchema),
-    useHandler((req, res, next) => controller.verify(req, res)),
+    useHandler(authController.verify),
   );
 
   return router;

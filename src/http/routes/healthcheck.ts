@@ -1,13 +1,11 @@
 import { Router } from 'express';
-import { HealthCheckController } from '../controller/healthcheck';
+import { healthCheckController } from '../controller/healthcheck';
 import { useHandler } from '../helpers/handler';
 
-export const healthcheckRoutes = (controller: HealthCheckController) => {
+export const healthcheckRoutes = () => {
   const router = Router();
 
-  router
-    .route('/')
-    .get(useHandler((req, res, next) => controller.get(req, res)));
+  router.route('/').get(useHandler(healthCheckController.get));
 
   return router;
 };

@@ -1,36 +1,39 @@
 import { Request, Response } from 'express';
-import { ExpenseService } from '../../service/expense';
-import { AuthService } from '../../service/auth';
-import { ExpenseMapper } from './mappers/expense';
+import { expenseMapper } from './mappers/expense';
+import { expenseService } from '../../service/expense';
+import { authService } from '../../service/auth';
 
-export class ExpenseController {
-  constructor(
-    private expenseService: ExpenseService,
-    private authService: AuthService,
-  ) {}
+const create = async (
+  { body, headers: { authorization } }: Request,
+  res: Response,
+) => {
+  const { id } = await authService.verifyAccessToken(authorization!);
+  const expense = await expenseService.create(body, id);
+  return res.status(201).json(expenseMapper.toResponseDto(expense));
+};
 
-  async create({ body, headers: { authorization } }: Request, res: Response) {
-    const { id } = await this.authService.verifyAccessToken(authorization!);
-    const expense = await this.expenseService.create(body, id);
-    return res.status(201).json(ExpenseMapper.toResponseDto(expense));
-  }
+const find = async ({ query }: Request, res: Response) => {
+  const expenses = await expenseService.find(query);
+  return res.status(200).json(expenses.map(expenseMapper.toResponseDto));
+};
 
-  async find({ query }: Request, res: Response) {
-    const expenses = await this.expenseService.find(query);
-    return res.status(200).json(expenses.map(ExpenseMapper.toResponseDto));
-  }
+const findOne = async ({ params: { id } }: Request, res: Response) => {
+  const expense = await expenseService.findOne(+id);
+  return res.status(200).json(expenseMapper.toResponseDto(expense));
+};
 
-  async findOne({ params: { id } }: Request, res: Response) {
-    const expense = await this.expenseService.findOne(+id);
-    return res.status(200).json(ExpenseMapper.toResponseDto(expense));
-  }
+const remove = async (
+  { params: { id }, headers: { authorization } }: Request,
+  res: Response,
+) => {
+  const user = await authService.verifyAccessToken(authorization!);
+  await expenseService.remove(+id, user.id);
+  return res.status(204).send();
+};
 
-  async delete(
-    { params: { id }, headers: { authorization } }: Request,
-    res: Response,
-  ) {
-    const user = await this.authService.verifyAccessToken(authorization!);
-    await this.expenseService.delete(+id, user.id);
-    return res.status(204).send();
-  }
-}
+export const expenseController = {
+  create,
+  find,
+  findOne,
+  remove,
+};

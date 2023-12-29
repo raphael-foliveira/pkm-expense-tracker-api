@@ -1,25 +1,29 @@
-import { Repository } from 'typeorm';
+import { dataSource } from '../data-source';
 import { Expense } from '../entitites/expense';
-import { ExpenseRepository } from '../../service/interfaces/repository';
 
-export class ExpenseRepositoryImpl implements ExpenseRepository {
-  constructor(private repository: Repository<Expense>) {}
+export const repository = dataSource.getRepository(Expense);
 
-  save(entity: Expense) {
-    return this.repository.save(entity);
-  }
+const save = (entity: Expense) => {
+  return repository.save(entity);
+};
 
-  findOneById(id: number) {
-    return this.repository.findOne({ where: { id }, relations: ['user'] });
-  }
+const findOneById = (id: number) => {
+  return repository.findOne({ where: { id }, relations: ['user'] });
+};
 
-  find(filter: Partial<Expense>) {
-    return this.repository.find({ where: filter });
-  }
+const find = (filter: Partial<Expense>) => {
+  return repository.find({ where: filter });
+};
 
-  async delete(id: number) {
-    const expense = await this.findOneById(id);
-    if (!expense) return null;
-    return this.repository.remove(expense);
-  }
-}
+const remove = async (id: number) => {
+  const expense = await findOneById(id);
+  if (!expense) return null;
+  return repository.remove(expense);
+};
+
+export const expenseRepository = {
+  save,
+  findOneById,
+  find,
+  remove,
+};

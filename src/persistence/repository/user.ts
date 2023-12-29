@@ -1,34 +1,40 @@
-import { Repository } from 'typeorm';
+import { dataSource } from '../data-source';
 import { User } from '../entitites/user';
-import { UserRepository } from '../../service/interfaces/repository';
 
-export class UserRepositoryImpl implements UserRepository {
-  constructor(private repository: Repository<User>) {}
+const repository = dataSource.getRepository(User);
 
-  findOneByEmail(email: string) {
-    return this.repository.findOne({ where: { email } });
-  }
+const findOneByEmail = (email: string) => {
+  return repository.findOne({ where: { email } });
+};
 
-  findOneByUsername(username: string) {
-    return this.repository.findOne({ where: { username } });
-  }
+const findOneByUsername = (username: string) => {
+  return repository.findOne({ where: { username } });
+};
 
-  save(entity: User) {
-    return this.repository.save(entity);
-  }
+const save = (entity: User) => {
+  return repository.save(entity);
+};
 
-  findOneById(id: number) {
-    return this.repository.findOne({ where: { id } });
-  }
+const findOneById = (id: number) => {
+  return repository.findOne({ where: { id } });
+};
 
-  find(filter: Partial<User>) {
-    return this.repository.find({ where: filter });
-  }
+const find = (filter: Partial<User>) => {
+  return repository.find({ where: filter });
+};
 
-  async delete(id: number) {
-    const user = await this.findOneById(id);
-    if (!user) return null;
-    await this.repository.delete(id);
-    return user;
-  }
-}
+const remove = async (id: number) => {
+  const user = await findOneById(id);
+  if (!user) return null;
+  await repository.delete(id);
+  return user;
+};
+
+export const userRepository = {
+  findOneByEmail,
+  findOneByUsername,
+  save,
+  findOneById,
+  find,
+  remove,
+};

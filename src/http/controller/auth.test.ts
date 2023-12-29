@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
 config({ path: './.env.test' });
+
 import { Express } from 'express';
 import * as supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
@@ -9,6 +10,7 @@ import { AuthService } from '../../service/auth';
 import { UserService } from '../../service/user';
 import { signupDtoFactory } from '../../stubs/auth';
 import { getApp } from '../server';
+import { deleteTables, truncateTables } from '../../persistence/helpers';
 
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
@@ -20,6 +22,7 @@ describe('AuthController', () => {
   let container: DIContainer;
 
   beforeAll(async () => {
+    await dataSource.initialize();
     app = getApp(dataSource);
     request = supertest.default(app);
     container = DIContainer.getInstance(dataSource, {
@@ -30,27 +33,17 @@ describe('AuthController', () => {
     userService = container.resolveUserService();
   });
 
-  beforeEach(async () => {
-    await dataSource.initialize();
+  afterEach(async () => {
+    await truncateTables();
   });
 
-  afterEach(async () => {
-    try {
-      await dataSource.query('DELETE FROM public.expense WHERE id > 0');
-      await dataSource.query('DELETE FROM public.user WHERE id > 0');
-    } finally {
-      await dataSource.destroy();
-    }
+  afterAll(async () => {
+    await dataSource.destroy();
   });
+
   describe('signup', () => {
     it('should return 201 with tokens when signup is successful', async () => {
-      const signupPayload = {
-        email: 'test@test.com',
-        firstName: 'test',
-        lastName: 'test',
-        username: 'test',
-        password: '123123123',
-      };
+      const signupPayload = signupDtoFactory();
 
       const { status, body } = await request
         .post('/auth/signup')

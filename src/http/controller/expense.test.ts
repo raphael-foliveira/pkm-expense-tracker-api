@@ -13,9 +13,9 @@ import { signupDtoFactory } from '../../stubs/auth';
 import { factoryMultiplier } from '../../stubs/common';
 import { createExpenseDtoFactory } from '../../stubs/expense';
 import { getApp } from '../server';
+import { deleteTables, truncateTables } from '../../persistence/helpers';
 
-const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, POSTGRES_PORT } =
-  process.env;
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 describe('ExpenseController', () => {
   let app: Express;
@@ -26,6 +26,7 @@ describe('ExpenseController', () => {
   let container: DIContainer;
 
   beforeAll(async () => {
+    await dataSource.initialize();
     app = getApp(dataSource);
     request = supertest.default(app);
     container = DIContainer.getInstance(dataSource, {
@@ -37,17 +38,12 @@ describe('ExpenseController', () => {
     userService = container.resolveUserService();
   });
 
-  beforeEach(async () => {
-    await dataSource.initialize();
+  afterEach(async () => {
+    await truncateTables();
   });
 
-  afterEach(async () => {
-    try {
-      await dataSource.query('DELETE FROM public.expense WHERE id > 0');
-      await dataSource.query('DELETE FROM public.user WHERE id > 0');
-    } finally {
-      await dataSource.destroy();
-    }
+  afterAll(async () => {
+    await dataSource.destroy();
   });
 
   describe('create', () => {
@@ -73,7 +69,7 @@ describe('ExpenseController', () => {
         numberOfExpenses,
       );
       const userDto = signupDtoFactory();
-      const newUser = await authService.signup(userDto);
+      await authService.signup(userDto);
       const user = await userService.findOneByEmail(userDto.email);
 
       await Promise.all(

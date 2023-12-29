@@ -18,10 +18,17 @@ const validate = (key: 'body' | 'query' | 'headers' | 'params') => {
     };
 };
 
-export const validateBody = validate('body');
+const validateBody = validate('body');
 
-export const validateQueryString = validate('query');
+const validateQueryString = validate('query');
 
-export const validateHeaders = validate('headers');
+const validateHeaders = validate('headers');
 
-export const validateParams = validate('params');
+const validateParams = validate('params');
+
+export const validationMiddleware = {
+  validateBody,
+  validateQueryString,
+  validateHeaders,
+  validateParams,
+};

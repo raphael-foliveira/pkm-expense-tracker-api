@@ -1,16 +1,21 @@
-import 'dotenv/config';
+import { config } from 'dotenv';
+config({ path: './.env.test' });
+
+import { Express } from 'express';
 import * as supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 import { DIContainer } from '../../di/container';
-import { testDataSource } from '../../persistence/data-source';
+import { dataSource } from '../../persistence/data-source';
 import { AuthService } from '../../service/auth';
-import { getApp } from '../server';
-import { Express } from 'express';
 import { ExpenseService } from '../../service/expense';
-import { signupDtoFactory } from '../../stubs/auth';
 import { UserService } from '../../service/user';
-import { createExpenseDtoFactory } from '../../stubs/expense';
+import { signupDtoFactory } from '../../stubs/auth';
 import { factoryMultiplier } from '../../stubs/common';
+import { createExpenseDtoFactory } from '../../stubs/expense';
+import { getApp } from '../server';
+
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, POSTGRES_PORT } =
+  process.env;
 
 describe('ExpenseController', () => {
   let app: Express;
@@ -21,10 +26,9 @@ describe('ExpenseController', () => {
   let container: DIContainer;
 
   beforeAll(async () => {
-    app = getApp(testDataSource);
+    app = getApp(dataSource);
     request = supertest.default(app);
-    const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
-    container = DIContainer.getInstance(testDataSource, {
+    container = DIContainer.getInstance(dataSource, {
       accessTokenSecret: ACCESS_TOKEN_SECRET!,
       refreshTokenSecret: REFRESH_TOKEN_SECRET!,
     });
@@ -34,11 +38,16 @@ describe('ExpenseController', () => {
   });
 
   beforeEach(async () => {
-    await testDataSource.initialize();
+    await dataSource.initialize();
   });
 
   afterEach(async () => {
-    await testDataSource.destroy();
+    try {
+      await dataSource.query('DELETE FROM public.expense WHERE id > 0');
+      await dataSource.query('DELETE FROM public.user WHERE id > 0');
+    } finally {
+      await dataSource.destroy();
+    }
   });
 
   describe('create', () => {
@@ -64,7 +73,7 @@ describe('ExpenseController', () => {
         numberOfExpenses,
       );
       const userDto = signupDtoFactory();
-      await authService.signup(userDto);
+      const newUser = await authService.signup(userDto);
       const user = await userService.findOneByEmail(userDto.email);
 
       await Promise.all(

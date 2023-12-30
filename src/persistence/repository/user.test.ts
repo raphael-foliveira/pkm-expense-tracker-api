@@ -15,7 +15,8 @@ describe('UserRepository', () => {
     await dataSource.destroy();
   });
   it('should delete a user', async () => {
-    await dataSource.getRepository(User).remove(await userRepository.find({}));
+    const previousUsers = await userRepository.find({});
+    await dataSource.getRepository(User).remove(previousUsers);
     const createdUser = await userRepository.save(await userFactory());
     const deletedUser = await userRepository.remove(createdUser.id!);
     const foundUsers = await userRepository.find({});

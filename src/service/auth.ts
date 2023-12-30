@@ -9,18 +9,18 @@ import { NotFoundError } from './errors/common';
 
 const signup = async (signupData: SignupDto) => {
   const password = await bcrypt.hash(signupData.password, 10);
-  const { email } = await userRepository.save({
+  const { username } = await userRepository.save({
     ...signupData,
     password,
   });
   return login({
-    email,
+    username,
     password: signupData.password,
   });
 };
 
-const login = async ({ email, password }: LoginDto) => {
-  const user = await findUserByEmail(email);
+const login = async ({ username, password }: LoginDto) => {
+  const user = await findUserByUsername(username);
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new InvalidCredentialsError();
@@ -37,21 +37,21 @@ const login = async ({ email, password }: LoginDto) => {
 };
 
 const logout = async (token: string) => {
-  const { email } = await jwtService.verifyAccessToken(token);
-  const user = await findUserByEmail(email);
+  const { username } = await jwtService.verifyAccessToken(token);
+  const user = await findUserByUsername(username);
   user.refreshToken = '';
   return userRepository.save(user);
 };
 
 const verifyAccessToken = async (token: string) => {
-  const { email } = await jwtService.verifyAccessToken(token);
-  return findUserByEmail(email);
+  const { username } = await jwtService.verifyAccessToken(token);
+  return findUserByUsername(username);
 };
 
 const refreshAccessToken = async (refreshToken: string) => {
   const { email, username, firstName, lastName } =
     await jwtService.verifyRefreshToken(refreshToken);
-  const user = await findUserByEmail(email);
+  const user = await findUserByUsername(username);
   if (user.refreshToken !== refreshToken) {
     throw new InvalidTokenError();
   }
@@ -64,9 +64,9 @@ const refreshAccessToken = async (refreshToken: string) => {
   return { accessToken };
 };
 
-const findUserByEmail = async (email: string) => {
+const findUserByUsername = async (username: string) => {
   try {
-    return await userService.findByEmail(email);
+    return await userService.findByUsername(username);
   } catch (error) {
     if (error instanceof NotFoundError) {
       throw new InvalidCredentialsError();

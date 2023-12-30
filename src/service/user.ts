@@ -15,7 +15,7 @@ const findByUsername = async (username: string) => {
   if (!user) {
     throw new NotFoundError('User not found');
   }
-  return user;
+  return user as Required<User>;
 };
 
 const findById = async (id: number) => {

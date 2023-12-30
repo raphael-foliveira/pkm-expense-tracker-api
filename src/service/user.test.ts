@@ -1,10 +1,8 @@
 import { config } from 'dotenv';
 config({ path: '.env.test' });
 
-import { dataSource } from '../persistence/data-source';
-import { signupDtoFactory } from '../stubs/auth';
-import { authService } from './auth';
 import { userService } from './user';
+import { dataSource } from '../persistence/data-source';
 import { userRepository } from '../persistence/repository/user';
 import { userFactory } from '../stubs/user';
 

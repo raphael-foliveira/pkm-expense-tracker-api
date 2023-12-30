@@ -59,7 +59,7 @@ describe('AuthController', () => {
       const fakeUser = signupDtoFactory();
       await authService.signup(fakeUser);
 
-      const { status, body } = await request
+      const { status } = await request
         .post('/auth/login')
         .send({ email: fakeUser.email, password: 'wrong password' });
 
@@ -67,7 +67,7 @@ describe('AuthController', () => {
     });
 
     it("should return 401 when user doesn't exist", async () => {
-      const { status, body } = await request
+      const { status } = await request
         .post('/auth/login')
         .send({ email: 'fake@email.com', password: 'fake_password' });
 

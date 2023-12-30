@@ -4,14 +4,12 @@ config({ path: './.env.test' });
 import { Express } from 'express';
 import * as supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
-import { signupDtoFactory } from '../../stubs/auth';
-import { getApp } from '../server';
-import { deleteTables, truncateTables } from '../../persistence/helpers';
 import { dataSource } from '../../persistence/data-source';
+import { truncateTables } from '../../persistence/helpers';
 import { authService } from '../../service/auth';
 import { jwtService } from '../../service/jwt';
-
-const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
+import { signupDtoFactory } from '../../stubs/auth';
+import { getApp } from '../server';
 
 describe('AuthController', () => {
   let app: Express;

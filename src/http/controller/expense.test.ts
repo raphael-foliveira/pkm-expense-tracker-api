@@ -5,16 +5,14 @@ import { Express } from 'express';
 import * as supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 import { dataSource } from '../../persistence/data-source';
+import { truncateTables } from '../../persistence/helpers';
+import { userRepository } from '../../persistence/repository/user';
+import { authService } from '../../service/auth';
+import { expenseService } from '../../service/expense';
 import { signupDtoFactory } from '../../stubs/auth';
 import { factoryMultiplier } from '../../stubs/common';
 import { createExpenseDtoFactory } from '../../stubs/expense';
 import { getApp } from '../server';
-import { deleteTables, truncateTables } from '../../persistence/helpers';
-import { authService } from '../../service/auth';
-import { userRepository } from '../../persistence/repository/user';
-import { expenseService } from '../../service/expense';
-
-const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 describe('ExpenseController', () => {
   let app: Express;

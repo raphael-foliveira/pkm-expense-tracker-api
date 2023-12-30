@@ -1,20 +1,18 @@
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from './types/jwt-payload';
 import { InvalidTokenError } from './errors/jwt';
-
-const secrets = {
-  accessToken: process.env.ACCESS_TOKEN_SECRET!,
-  refreshToken: process.env.REFRESH_TOKEN_SECRET!,
-};
+import { configService } from './config';
 
 const signAccessToken = async (payload: JwtPayload) => {
-  return jwt.sign(payload, secrets.accessToken, {
+  return jwt.sign(payload, configService.environment.accessTokenSecret, {
     expiresIn: '4h',
   });
 };
 
 const signRefreshToken = async (payload: JwtPayload) => {
-  return jwt.sign(payload, secrets.refreshToken, { expiresIn: '120h' });
+  return jwt.sign(payload, configService.environment.refreshTokenSecret, {
+    expiresIn: '120h',
+  });
 };
 
 const generateTokens = async (payload: JwtPayload) => {
@@ -28,7 +26,10 @@ const generateTokens = async (payload: JwtPayload) => {
 
 const verifyAccessToken = async (token: string) => {
   try {
-    return jwt.verify(token, secrets.accessToken) as JwtPayload;
+    return jwt.verify(
+      token,
+      configService.environment.accessTokenSecret,
+    ) as JwtPayload;
   } catch {
     throw new InvalidTokenError();
   }
@@ -36,7 +37,10 @@ const verifyAccessToken = async (token: string) => {
 
 const verifyRefreshToken = async (token: string) => {
   try {
-    return jwt.verify(token, secrets.refreshToken) as JwtPayload;
+    return jwt.verify(
+      token,
+      configService.environment.refreshTokenSecret,
+    ) as JwtPayload;
   } catch {
     throw new InvalidTokenError();
   }

@@ -6,7 +6,7 @@ const wrapValidation = (key: 'body' | 'query' | 'headers' | 'params') => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         req[key] = schema.parse(req[key]);
-        next();
+        return next();
       } catch (error) {
         if (error instanceof z.ZodError) {
           const message = JSON.parse(error.message);

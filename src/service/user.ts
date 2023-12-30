@@ -7,7 +7,15 @@ const findByEmail = async (email: string) => {
   if (!user) {
     throw new NotFoundError('User not found');
   }
-  return user as User & { id: number };
+  return user as Required<User>;
+};
+
+const findByUsername = async (username: string) => {
+  const user = await userRepository.findOneByUsername(username);
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+  return user;
 };
 
 const findById = async (id: number) => {
@@ -15,10 +23,11 @@ const findById = async (id: number) => {
   if (!user) {
     throw new NotFoundError('User not found');
   }
-  return user as User & { id: number };
+  return user as Required<User>;
 };
 
 export const userService = {
   findByEmail,
+  findByUsername,
   findById,
 };

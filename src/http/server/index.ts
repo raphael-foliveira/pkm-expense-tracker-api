@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import { dataSource } from '../../persistence/data-source';
 import { errorHandlingMiddleware } from '../middleware/error-handling';
@@ -9,6 +10,7 @@ export const getApp = () => {
   const app = express();
 
   app.use(express.json());
+  app.use(cors());
 
   app.use('/healthcheck', healthcheckRoutes());
   app.use('/auth', authRoutes());

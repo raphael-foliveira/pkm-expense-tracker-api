@@ -49,7 +49,7 @@ describe('AuthController', () => {
 
       const { status, body } = await request
         .post('/auth/login')
-        .send({ email: fakeUser.email, password: fakeUser.password });
+        .send({ username: fakeUser.username, password: fakeUser.password });
 
       expect(status).toEqual(200);
       expect(body.accessToken).toBeDefined();
@@ -59,17 +59,17 @@ describe('AuthController', () => {
       const fakeUser = signupDtoFactory();
       await authService.signup(fakeUser);
 
-      const { status, body } = await request
+      const { status } = await request
         .post('/auth/login')
-        .send({ email: fakeUser.email, password: 'wrong password' });
+        .send({ username: fakeUser.username, password: 'wrong password' });
 
       expect(status).toEqual(401);
     });
 
     it("should return 401 when user doesn't exist", async () => {
-      const { status, body } = await request
+      const { status } = await request
         .post('/auth/login')
-        .send({ email: 'fake@email.com', password: 'fake_password' });
+        .send({ username: 'fakeusername', password: 'fake_password' });
 
       expect(status).toEqual(401);
     });

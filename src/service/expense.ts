@@ -36,10 +36,7 @@ const find = (filter: Partial<Expense>) => {
 };
 
 const remove = async (id: number, userId: number) => {
-  const expenseToDelete = await expenseRepository.findOneById(id);
-  if (!expenseToDelete) {
-    throw new NotFoundError('Expense not found');
-  }
+  const expenseToDelete = await findOne(id);
   if (expenseToDelete.user.id !== userId) {
     throw new ForbiddenError('This expense does not belong to this user');
   }

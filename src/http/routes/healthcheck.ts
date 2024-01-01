@@ -2,10 +2,8 @@ import { Router } from 'express';
 import { healthCheckController } from '../controller/healthcheck';
 import { useHandler } from '../helpers/handler';
 
-export const healthcheckRoutes = () => {
-  const router = Router();
+const healthcheckRouter = Router();
 
-  router.route('/').get(useHandler(healthCheckController.get));
+healthcheckRouter.route('/').get(useHandler(healthCheckController.get));
 
-  return router;
-};
+export { healthcheckRouter };

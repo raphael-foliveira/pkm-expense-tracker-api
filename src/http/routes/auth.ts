@@ -9,38 +9,36 @@ import {
 } from '../schemas/auth';
 import { validate } from '../middleware/validation';
 
-export const authRoutes = () => {
-  const router = Router();
+const authRouter = Router();
 
-  router.post(
-    '/signup',
-    validate.body(SignupSchema),
-    useHandler(authController.signup),
-  );
+authRouter.post(
+  '/signup',
+  validate.body(SignupSchema),
+  useHandler(authController.signup),
+);
 
-  router.post(
-    '/login',
-    validate.body(LoginSchema),
-    useHandler(authController.login),
-  );
+authRouter.post(
+  '/login',
+  validate.body(LoginSchema),
+  useHandler(authController.login),
+);
 
-  router.get(
-    '/logout',
-    validate.headers(AuthorizationSchema),
-    useHandler(authController.logout),
-  );
+authRouter.get(
+  '/logout',
+  validate.headers(AuthorizationSchema),
+  useHandler(authController.logout),
+);
 
-  router.post(
-    '/refresh-token',
-    validate.body(RefreshTokenSchema),
-    useHandler(authController.refreshAccessToken),
-  );
+authRouter.post(
+  '/refresh-token',
+  validate.body(RefreshTokenSchema),
+  useHandler(authController.refreshAccessToken),
+);
 
-  router.get(
-    '/verify',
-    validate.headers(AuthorizationSchema),
-    useHandler(authController.verify),
-  );
+authRouter.get(
+  '/verify',
+  validate.headers(AuthorizationSchema),
+  useHandler(authController.verify),
+);
 
-  return router;
-};
+export { authRouter };

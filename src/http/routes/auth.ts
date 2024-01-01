@@ -9,7 +9,7 @@ import {
 } from '../schemas/auth';
 import { validate } from '../middleware/validation';
 
-const authRouter = Router();
+export const authRouter = Router();
 
 authRouter.post(
   '/signup',
@@ -40,5 +40,3 @@ authRouter.get(
   validate.headers(AuthorizationSchema),
   useHandler(authController.verify),
 );
-
-export { authRouter };

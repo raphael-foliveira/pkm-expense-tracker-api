@@ -6,7 +6,7 @@ import { IdParamSchema } from '../schemas/common';
 import { expenseController } from '../controller/expense';
 import { validate } from '../middleware/validation';
 
-const expenseRouter = Router();
+export const expenseRouter = Router();
 
 expenseRouter
   .route('/')
@@ -25,5 +25,3 @@ expenseRouter
     validate.headers(AuthorizationSchema),
     useHandler(expenseController.remove),
   );
-
-export { expenseRouter };

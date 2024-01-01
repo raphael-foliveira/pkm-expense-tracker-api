@@ -7,7 +7,7 @@ import { expenseController } from '../controller/expense';
 import { validate } from '../middleware/validation';
 
 export const expenseRoutes = () => {
-  const router = Router();
+  const router = Router({ strict: false });
 
   router
     .route('/')

@@ -38,7 +38,8 @@ describe('AuthController', () => {
         .send(signupPayload);
 
       expect(status).toEqual(201);
-      expect(body.accessToken).toBeDefined();
+      expect(body.tokens.accessToken).toBeDefined();
+      expect(body.tokens.refreshToken).toBeDefined();
     });
   });
 
@@ -52,7 +53,8 @@ describe('AuthController', () => {
         .send({ username: fakeUser.username, password: fakeUser.password });
 
       expect(status).toEqual(200);
-      expect(body.accessToken).toBeDefined();
+      expect(body.tokens.accessToken).toBeDefined();
+      expect(body.tokens.refreshToken).toBeDefined();
     });
 
     it('should return 401 when login fails', async () => {
@@ -78,7 +80,9 @@ describe('AuthController', () => {
   describe('logout', () => {
     it('should return 200 when logout is successful', async () => {
       const fakeUser = signupDtoFactory();
-      const { accessToken } = await authService.signup(fakeUser);
+      const {
+        tokens: { accessToken },
+      } = await authService.signup(fakeUser);
 
       const { status, body } = await request
         .get('/auth/logout')
@@ -92,7 +96,9 @@ describe('AuthController', () => {
   describe('refreshAccessToken', () => {
     it('should return 201 with new access token when refresh token is valid', async () => {
       const fakeUser = signupDtoFactory();
-      const { refreshToken } = await authService.signup(fakeUser);
+      const {
+        tokens: { refreshToken },
+      } = await authService.signup(fakeUser);
       const verifyRefreshTokenSpy = jest.spyOn(
         jwtService,
         'verifyRefreshToken',
@@ -111,7 +117,9 @@ describe('AuthController', () => {
   describe('Verify', () => {
     it('should return 200 with user data when access token is valid', async () => {
       const fakeUser = signupDtoFactory();
-      const { accessToken } = await authService.signup(fakeUser);
+      const {
+        tokens: { accessToken },
+      } = await authService.signup(fakeUser);
 
       const { status, body } = await request
         .get('/auth/verify')

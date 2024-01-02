@@ -2,9 +2,9 @@ import cors from 'cors';
 import express from 'express';
 import { dataSource } from '../../persistence/data-source';
 import { errorHandlingMiddleware } from '../middleware/error-handling';
-import { authRoutes } from '../routes/auth';
-import { expenseRoutes } from '../routes/expense';
-import { healthcheckRoutes } from '../routes/healthcheck';
+import { healthcheckRouter } from '../routes/healthcheck';
+import { authRouter } from '../routes/auth';
+import { expenseRouter } from '../routes/expense';
 
 export const getApp = () => {
   const app = express();
@@ -12,9 +12,9 @@ export const getApp = () => {
   app.use(express.json());
   app.use(cors());
 
-  app.use('/healthcheck', healthcheckRoutes());
-  app.use('/auth', authRoutes());
-  app.use('/expenses', expenseRoutes());
+  app.use('/healthcheck', healthcheckRouter);
+  app.use('/auth', authRouter);
+  app.use('/expenses', expenseRouter);
 
   app.use(errorHandlingMiddleware);
   return app;

@@ -2,6 +2,7 @@ import { Expense } from '../../../persistence/entitites/expense';
 import { userMapper, UserResponseDto } from './user';
 
 export interface ExpenseResponseDto {
+  id: number;
   price: number;
   description: string;
   date: Date;
@@ -11,6 +12,7 @@ export interface ExpenseResponseDto {
 
 const toResponseDto = (expense: Expense): ExpenseResponseDto => {
   const dto: ExpenseResponseDto = {
+    id: expense.id!,
     price: expense.price,
     description: expense.description,
     date: expense.date,

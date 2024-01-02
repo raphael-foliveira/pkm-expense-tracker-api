@@ -8,8 +8,8 @@ const signup = async ({ body }: Request, res: Response) => {
 };
 
 const login = async ({ body }: Request, res: Response) => {
-  const tokens = await authService.login(body);
-  return res.status(200).json(tokens);
+  const data = await authService.login(body);
+  return res.status(200).json(data);
 };
 
 const logout = async (

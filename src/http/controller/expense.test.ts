@@ -34,7 +34,9 @@ describe('ExpenseController', () => {
 
   describe('create', () => {
     it('should successfully create and expense', async () => {
-      const { accessToken } = await authService.signup(signupDtoFactory());
+      const {
+        tokens: { accessToken },
+      } = await authService.signup(signupDtoFactory());
       const user = await authService.verifyAccessToken(accessToken);
       const expenseDto = createExpenseDtoFactory();
 
@@ -71,7 +73,9 @@ describe('ExpenseController', () => {
 
   describe('findOne', () => {
     it('should successfully find an expense', async () => {
-      const { accessToken } = await authService.signup(signupDtoFactory());
+      const {
+        tokens: { accessToken },
+      } = await authService.signup(signupDtoFactory());
       const user = await authService.verifyAccessToken(accessToken);
       const expenseDto = createExpenseDtoFactory();
       const expense = await expenseService.create(expenseDto, user.id!);
@@ -86,7 +90,9 @@ describe('ExpenseController', () => {
 
   describe('delete', () => {
     it('should successfully delete an expense', async () => {
-      const { accessToken } = await authService.signup(signupDtoFactory());
+      const {
+        tokens: { accessToken },
+      } = await authService.signup(signupDtoFactory());
       const user = await authService.verifyAccessToken(accessToken);
       const expenseDto = createExpenseDtoFactory();
       const expense = await expenseService.create(expenseDto, user.id!);

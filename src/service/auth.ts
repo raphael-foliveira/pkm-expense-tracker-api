@@ -33,7 +33,7 @@ const login = async ({ username, password }: LoginDto) => {
   });
   user.refreshToken = tokens.refreshToken;
   await userRepository.save(user);
-  return tokens;
+  return { tokens, user };
 };
 
 const logout = async (token: string) => {

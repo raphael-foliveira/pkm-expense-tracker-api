@@ -31,9 +31,21 @@ const remove = async (
   return res.status(204).send();
 };
 
+const getByMonth = async (
+  { params: { month, year } }: Request,
+  res: Response,
+) => {
+  const expenses = await expenseService.getByMonth({
+    month: +month,
+    year: +year,
+  });
+  return res.status(200).json(expenses.map(expenseMapper.toResponseDto));
+};
+
 export const expenseController = {
   create,
   find,
   findOne,
   remove,
+  getByMonth,
 };

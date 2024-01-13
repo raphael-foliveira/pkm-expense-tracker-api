@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, z } from 'zod';
 
-const wrapValidation = (key: 'body' | 'query' | 'headers' | 'params') => {
+const wrapValidation = (
+  validationFn: (req: Request, schema: AnyZodObject) => void,
+) => {
   return (schema: AnyZodObject) =>
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        req[key] = schema.parse(req[key]);
+        validationFn(req, schema);
         return next();
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -18,8 +20,8 @@ const wrapValidation = (key: 'body' | 'query' | 'headers' | 'params') => {
 };
 
 export const validate = {
-  body: wrapValidation('body'),
-  queryString: wrapValidation('query'),
-  headers: wrapValidation('headers'),
-  params: wrapValidation('params'),
+  body: wrapValidation((r, s) => (r.body = s.parse(r.body))),
+  queryString: wrapValidation((r, s) => (r.query = s.parse(r.query))),
+  headers: wrapValidation((r, s) => (r.headers = s.parse(r.headers))),
+  params: wrapValidation((r, s) => (r.params = s.parse(r.params))),
 };

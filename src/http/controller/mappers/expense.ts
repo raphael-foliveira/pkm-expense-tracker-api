@@ -10,17 +10,22 @@ export interface ExpenseResponseDto {
   createdBy?: UserResponseDto;
 }
 
-const toResponseDto = (expense: Expense): ExpenseResponseDto => {
+const toResponseDto = ({
+  id = 0,
+  price,
+  description,
+  date,
+  createdAt = new Date(0),
+  user,
+}: Expense): ExpenseResponseDto => {
   const dto: ExpenseResponseDto = {
-    id: expense.id!,
-    price: expense.price,
-    description: expense.description,
-    date: expense.date,
-    createdAt: expense.createdAt!,
+    id,
+    price,
+    description,
+    date,
+    createdAt,
+    ...(user ?? { createdBy: user }),
   };
-  if (expense.user) {
-    dto.createdBy = userMapper.toResponseDto(expense.user);
-  }
   return dto;
 };
 

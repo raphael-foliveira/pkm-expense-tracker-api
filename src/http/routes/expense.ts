@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { CreateExpenseSchema } from '../schemas/expense';
+import { CreateExpenseSchema, GetByMonthSchema } from '../schemas/expense';
 import { useHandler } from '../helpers/handler';
 import { AuthorizationSchema } from '../schemas/auth';
 import { IdParamSchema } from '../schemas/common';
@@ -24,4 +24,11 @@ expenseRouter
   .delete(
     validate.headers(AuthorizationSchema),
     useHandler(expenseController.remove),
+  );
+
+expenseRouter
+  .route('/month/:month/:year')
+  .get(
+    validate.params(GetByMonthSchema),
+    useHandler(expenseController.getByMonth),
   );

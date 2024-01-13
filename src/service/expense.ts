@@ -51,10 +51,20 @@ const findUserById = async (id: number) => {
   return user;
 };
 
+export type GetByMonthProps = {
+  month: number;
+  year: number;
+};
+
+const getByMonth = async (getByMonthProps: GetByMonthProps) => {
+  return expenseRepository.getByMonth(getByMonthProps);
+};
+
 export const expenseService = {
   create,
   update,
   findOne,
   find,
   remove,
+  getByMonth,
 };

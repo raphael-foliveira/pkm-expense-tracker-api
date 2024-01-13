@@ -7,7 +7,7 @@ export interface ExpenseResponseDto {
   description: string;
   date: Date;
   createdAt: Date;
-  user?: UserResponseDto;
+  createdBy?: UserResponseDto;
 }
 
 const toResponseDto = (expense: Expense): ExpenseResponseDto => {
@@ -19,7 +19,7 @@ const toResponseDto = (expense: Expense): ExpenseResponseDto => {
     createdAt: expense.createdAt!,
   };
   if (expense.user) {
-    dto.user = userMapper.toResponseDto(expense.user);
+    dto.createdBy = userMapper.toResponseDto(expense.user);
   }
   return dto;
 };

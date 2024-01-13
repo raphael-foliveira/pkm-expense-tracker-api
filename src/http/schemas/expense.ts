@@ -19,3 +19,11 @@ export const UpdateExpenseSchema = z.object({
     .max(new Date(), 'A data deve ser menor ou igual a data atual')
     .optional(),
 });
+
+export const GetByMonthSchema = z.object({
+  month: z.coerce
+    .number()
+    .min(1, 'O mês deve ser um valor entre 1 e 12')
+    .max(12, 'O mês deve ser um valor entre 1 e 12'),
+  year: z.coerce.number(),
+});

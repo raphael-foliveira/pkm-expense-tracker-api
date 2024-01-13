@@ -24,8 +24,10 @@ const toResponseDto = ({
     description,
     date,
     createdAt,
-    ...(user ?? { createdBy: user }),
   };
+  if (user) {
+    dto.createdBy = userMapper.toResponseDto(user);
+  }
   return dto;
 };
 

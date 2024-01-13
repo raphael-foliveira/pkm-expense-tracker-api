@@ -2,6 +2,7 @@ import { GetByMonthProps } from '../../service/expense';
 import { dataSource } from '../data-source';
 import { Expense } from '../entitites/expense';
 import datefns from 'date-fns';
+import { User } from '../entitites/user';
 
 export const repository = dataSource.getRepository(Expense);
 
@@ -10,7 +11,9 @@ const save = (entity: Expense) => {
 };
 
 const findOneById = (id: number) => {
-  return repository.findOne({ where: { id }, relations: ['user'] });
+  return repository.findOne({ where: { id }, relations: ['user'] }) as Promise<
+    (Expense & { user: User }) | null
+  >;
 };
 
 const find = (filter: Partial<Expense>) => {

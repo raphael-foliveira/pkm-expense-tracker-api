@@ -121,15 +121,17 @@ describe('AuthController', () => {
         tokens: { accessToken },
       } = await authService.signup(fakeUser);
 
-      const { status, body } = await request
+      const {
+        status,
+        body: { email, username, fullName },
+      } = await request
         .get('/auth/verify')
         .set('Authorization', `Bearer ${accessToken}`);
 
       expect(status).toBe(200);
-      expect(body.email).toEqual(fakeUser.email);
-      expect(body.username).toEqual(fakeUser.username);
-      expect(body.firstName).toEqual(fakeUser.firstName);
-      expect(body.lastName).toEqual(fakeUser.lastName);
+      expect(email).toEqual(fakeUser.email);
+      expect(username).toEqual(fakeUser.username);
+      expect(fullName).toEqual(`${fakeUser.firstName} ${fakeUser.lastName}`);
     });
   });
 });

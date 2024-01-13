@@ -30,7 +30,7 @@ export class Expense {
     onDelete: 'SET NULL',
     nullable: true,
   })
-  user: User;
+  user?: User;
 
   @Column()
   date: Date;

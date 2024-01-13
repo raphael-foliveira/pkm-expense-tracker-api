@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, z } from 'zod';
 
 const wrapValidation = (fn: (r: Request, s: AnyZodObject) => void) => {
-  return (schema: AnyZodObject) =>
-    async (req: Request, res: Response, next: NextFunction) => {
+  return (schema: AnyZodObject) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         fn(req, schema);
         return next();
@@ -15,6 +15,7 @@ const wrapValidation = (fn: (r: Request, s: AnyZodObject) => void) => {
         return res.status(500).json({ message: 'Internal server error' });
       }
     };
+  };
 };
 
 export const validate = {

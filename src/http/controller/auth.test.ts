@@ -128,8 +128,9 @@ describe('AuthController', () => {
       expect(status).toBe(200);
       expect(body.email).toEqual(fakeUser.email);
       expect(body.username).toEqual(fakeUser.username);
-      expect(body.firstName).toEqual(fakeUser.firstName);
-      expect(body.lastName).toEqual(fakeUser.lastName);
+      expect(body.fullName).toEqual(
+        `${fakeUser.firstName} ${fakeUser.lastName}`,
+      );
     });
   });
 });

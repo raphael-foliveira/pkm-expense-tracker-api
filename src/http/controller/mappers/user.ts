@@ -1,18 +1,24 @@
 import { User } from '../../../persistence/entitites/user';
 
 export interface UserResponseDto {
+  id: number;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
 }
 
-const toResponseDto = (user: User): UserResponseDto => {
+const toResponseDto = ({
+  id = 0,
+  username,
+  email,
+  firstName,
+  lastName,
+}: User): UserResponseDto => {
   return {
-    username: user.username,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    id,
+    username,
+    email,
+    fullName: `${firstName} ${lastName}`,
   };
 };
 

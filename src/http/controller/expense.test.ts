@@ -37,7 +37,7 @@ describe('ExpenseController', () => {
       const {
         tokens: { accessToken },
       } = await authService.signup(signupDtoFactory());
-      const user = await authService.verifyAccessToken(accessToken);
+      const { username } = await authService.verifyAccessToken(accessToken);
       const expenseDto = createExpenseDtoFactory();
 
       const { status, body } = await request
@@ -47,7 +47,7 @@ describe('ExpenseController', () => {
 
       expect(status).toBe(201);
       expect(body.price).toEqual(expenseDto.price);
-      expect(body.user.username).toEqual(user.username);
+      expect(body.createdBy.username).toEqual(username);
     });
 
     it('should successfully list expenses', async () => {
@@ -84,7 +84,7 @@ describe('ExpenseController', () => {
 
       expect(status).toBe(200);
       expect(body.price).toEqual(expenseDto.price);
-      expect(body.user.username).toEqual(user.username);
+      expect(body.createdBy.username).toEqual(user.username);
     });
   });
 

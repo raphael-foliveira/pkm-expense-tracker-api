@@ -7,17 +7,25 @@ const get = (key: string): string => {
 };
 
 const environment = {
-  postgresUser: get('POSTGRES_USER'),
-  postgresPassword: get('POSTGRES_PASSWORD'),
-  postgresDb: get('POSTGRES_DB'),
-  postgresHost: get('POSTGRES_HOST'),
-  postgresPort: parseInt(get('POSTGRES_PORT')),
-  accessTokenSecret: get('ACCESS_TOKEN_SECRET'),
-  refreshTokenSecret: get('REFRESH_TOKEN_SECRET'),
   nodeEnv: get('NODE_ENV'),
+};
+
+const database = {
+  user: get('POSTGRES_USER'),
+  password: get('POSTGRES_PASSWORD'),
+  name: get('POSTGRES_DB'),
+  host: get('POSTGRES_HOST'),
+  port: parseInt(get('POSTGRES_PORT')),
+};
+
+const secrets = {
+  accessToken: get('ACCESS_TOKEN_SECRET'),
+  refreshToken: get('REFRESH_TOKEN_SECRET'),
 };
 
 export const configService = {
   get,
   environment,
+  database,
+  secrets,
 };

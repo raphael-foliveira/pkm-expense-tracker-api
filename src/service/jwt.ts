@@ -3,14 +3,16 @@ import { JwtPayload } from './types/jwt-payload';
 import { InvalidTokenError } from './errors/jwt';
 import { configService } from './config';
 
+const { accessToken, refreshToken } = configService.secrets;
+
 const signAccessToken = async (payload: JwtPayload) => {
-  return jwt.sign(payload, configService.environment.accessTokenSecret, {
+  return jwt.sign(payload, accessToken, {
     expiresIn: '4h',
   });
 };
 
 const signRefreshToken = async (payload: JwtPayload) => {
-  return jwt.sign(payload, configService.environment.refreshTokenSecret, {
+  return jwt.sign(payload, refreshToken, {
     expiresIn: '120h',
   });
 };
@@ -26,10 +28,7 @@ const generateTokens = async (payload: JwtPayload) => {
 
 const verifyAccessToken = async (token: string) => {
   try {
-    return jwt.verify(
-      token,
-      configService.environment.accessTokenSecret,
-    ) as JwtPayload;
+    return jwt.verify(token, accessToken) as JwtPayload;
   } catch {
     throw new InvalidTokenError();
   }
@@ -37,10 +36,7 @@ const verifyAccessToken = async (token: string) => {
 
 const verifyRefreshToken = async (token: string) => {
   try {
-    return jwt.verify(
-      token,
-      configService.environment.refreshTokenSecret,
-    ) as JwtPayload;
+    return jwt.verify(token, refreshToken) as JwtPayload;
   } catch {
     throw new InvalidTokenError();
   }

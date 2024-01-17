@@ -5,6 +5,8 @@ import { config } from './config';
 
 const { accessToken, refreshToken } = config.secrets;
 
+const { accessToken, refreshToken } = configService.secrets;
+
 const signAccessToken = async (payload: JwtPayload) => {
   return jwt.sign(payload, accessToken, {
     expiresIn: '4h',

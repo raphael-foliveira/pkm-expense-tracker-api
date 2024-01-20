@@ -11,6 +11,10 @@ export const getApp = () => {
 
   app.use(express.json());
   app.use(cors());
+  app.use((req, res, next) => {
+    res.removeHeader('x-powered-by');
+    return next();
+  });
 
   app.use('/healthcheck', healthcheckRouter);
   app.use('/auth', authRouter);

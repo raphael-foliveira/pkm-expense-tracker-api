@@ -34,7 +34,6 @@ const getByMonth = async ({ month, year }: GetByMonthProps) => {
     .where('expense.date > :rangeStart AND expense.date < :rangeEnd', {
       rangeStart,
       rangeEnd,
-      month,
     })
     .innerJoinAndSelect('expense.user', 'user')
     .getMany();

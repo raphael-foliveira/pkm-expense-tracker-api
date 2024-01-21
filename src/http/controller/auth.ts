@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import { userMapper } from './mappers/user';
 import { authService } from '../../service/auth';
 
@@ -28,7 +28,7 @@ const refreshAccessToken = async (
   return res.status(201).json(tokens);
 };
 
-const verify = async (
+const verify: RequestHandler = async (
   { headers: { authorization } }: Request,
   res: Response,
 ) => {

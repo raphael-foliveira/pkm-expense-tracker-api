@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 config({ path: './.env.test' });
 
 import { Express } from 'express';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 import { dataSource } from '../../persistence/data-source';
 import { truncateTables } from '../../persistence/helpers';
@@ -18,7 +18,7 @@ describe('AuthController', () => {
   beforeAll(async () => {
     await dataSource.initialize();
     app = getApp();
-    request = supertest.default(app);
+    request = supertest(app);
   });
 
   afterEach(async () => {

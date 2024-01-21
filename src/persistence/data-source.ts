@@ -1,17 +1,17 @@
 import { DataSource } from 'typeorm';
 import { User } from './entitites/user';
 import { Expense } from './entitites/expense';
-import { configService } from '../service/config';
+import { config } from '../service/config';
 
 const entities = [User, Expense];
 
 export const dataSource = new DataSource({
   type: 'postgres',
-  host: configService.environment.postgresHost,
-  port: configService.environment.postgresPort,
-  username: configService.environment.postgresUser,
-  password: configService.environment.postgresPassword,
-  database: configService.environment.postgresDb,
-  synchronize: configService.environment.nodeEnv !== 'prod',
+  host: config.database.host,
+  port: config.database.port,
+  username: config.database.user,
+  password: config.database.password,
+  database: config.database.name,
+  synchronize: config.environment.nodeEnv !== 'prod',
   entities,
 });

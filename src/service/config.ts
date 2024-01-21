@@ -23,7 +23,7 @@ const secrets = {
   refreshToken: get('REFRESH_TOKEN_SECRET'),
 };
 
-export const configService = {
+export const config = {
   get,
   environment,
   database,

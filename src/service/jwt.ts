@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from './types/jwt-payload';
 import { InvalidTokenError } from './errors/jwt';
-import { configService } from './config';
+import { config } from './config';
 
-const { accessToken, refreshToken } = configService.secrets;
+const { accessToken, refreshToken } = config.secrets;
 
 const signAccessToken = async (payload: JwtPayload) => {
   return jwt.sign(payload, accessToken, {

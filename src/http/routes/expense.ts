@@ -5,6 +5,7 @@ import { AuthorizationSchema } from '../schemas/auth';
 import { IdParamSchema } from '../schemas/common';
 import { expenseController } from '../controller/expense';
 import { validate } from '../middleware/validation';
+import { authMiddleware } from '../middleware/auth';
 
 export const expenseRouter = Router();
 
@@ -14,6 +15,7 @@ expenseRouter
   .post(
     validate.headers(AuthorizationSchema),
     validate.body(CreateExpenseSchema),
+    authMiddleware.checkToken,
     useHandler(expenseController.create),
   );
 
@@ -23,6 +25,7 @@ expenseRouter
   .get(useHandler(expenseController.findOne))
   .delete(
     validate.headers(AuthorizationSchema),
+    authMiddleware.checkToken,
     useHandler(expenseController.remove),
   );
 

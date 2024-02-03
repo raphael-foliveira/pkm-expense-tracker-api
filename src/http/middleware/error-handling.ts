@@ -9,6 +9,7 @@ export const errorHandlingMiddleware: ErrorRequestHandler = (
 ) => {
   let status = 500;
   let message = error.message;
+  console.log(error);
   if (error instanceof HttpError) {
     status = error.status;
     message = error.message;

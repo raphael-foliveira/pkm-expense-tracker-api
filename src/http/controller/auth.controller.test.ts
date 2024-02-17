@@ -8,10 +8,8 @@ import TestAgent from 'supertest/lib/agent';
 import { jwtService } from '../../service/jwt.service';
 import { signupDtoFactory } from '../../stubs/auth';
 import { userFactory } from '../../stubs/user';
-import {
-  mockUserRepository,
-  userRepositoryMock,
-} from '../../tests/mocks/repository/user.repository.mock';
+import { mocks } from '../../tests/mocks';
+import { mockUserRepository } from '../../tests/mocks/repository/user.repository.mock';
 import { getApp } from '../server';
 
 describe('AuthController', () => {
@@ -38,8 +36,8 @@ describe('AuthController', () => {
         password: hashedPassword,
       };
 
-      userRepositoryMock('save', returnedUser);
-      userRepositoryMock('findOneByUsername', returnedUser);
+      mocks.userRepository('save', returnedUser);
+      mocks.userRepository('findOneByUsername', returnedUser);
 
       const { status, body } = await request
         .post('/auth/signup')
@@ -56,7 +54,7 @@ describe('AuthController', () => {
       const password = 'some_password';
       const hashedPassword = hashSync(password, 10);
       const user = userFactory();
-      userRepositoryMock('findOneByUsername', {
+      mocks.userRepository('findOneByUsername', {
         ...user,
         password: hashedPassword,
       });
@@ -71,7 +69,7 @@ describe('AuthController', () => {
 
     it('should return 401 when login fails', async () => {
       const user = userFactory();
-      userRepositoryMock('findOneByUsername', user);
+      mocks.userRepository('findOneByUsername', user);
 
       const { status } = await request
         .post('/auth/login')
@@ -93,7 +91,7 @@ describe('AuthController', () => {
     it('should return 200 when logout is successful', async () => {
       const user = userFactory();
       const accessToken = await jwtService.signAccessToken(user);
-      userRepositoryMock('findOneByUsername', user);
+      mocks.userRepository('findOneByUsername', user);
 
       const { status, body } = await request
         .get('/auth/logout')
@@ -112,7 +110,7 @@ describe('AuthController', () => {
         jwtService,
         'verifyRefreshToken',
       );
-      userRepositoryMock('findOneByUsername', { ...user, refreshToken });
+      mocks.userRepository('findOneByUsername', { ...user, refreshToken });
 
       const { status, body } = await request
         .post('/auth/refresh-token')
@@ -128,7 +126,7 @@ describe('AuthController', () => {
     it('should return 200 with user data when access token is valid', async () => {
       const user = userFactory();
       const accessToken = await jwtService.signAccessToken(user);
-      userRepositoryMock('findOneByUsername', user);
+      mocks.userRepository('findOneByUsername', user);
 
       const { status, body } = await request
         .get('/auth/verify')

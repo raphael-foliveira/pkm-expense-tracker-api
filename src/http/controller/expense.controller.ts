@@ -39,7 +39,8 @@ const getByMonth = async (
     month: +month,
     year: +year,
   });
-  return res.status(200).json(expenses.map(expenseMapper.toResponseDto));
+  const mappedExpenses = expenses.map(expenseMapper.toResponseDto);
+  return res.status(200).json(mappedExpenses);
 };
 
 export const expenseController = {

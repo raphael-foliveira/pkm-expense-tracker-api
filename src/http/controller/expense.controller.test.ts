@@ -8,14 +8,9 @@ import { jwtService } from '../../service/jwt.service';
 import { factoryMultiplier } from '../../stubs/common';
 import { createExpenseDtoFactory, expenseFactory } from '../../stubs/expense';
 import { userFactory } from '../../stubs/user';
-import {
-  expenseRepositoryMock,
-  mockExpenseRepository,
-} from '../../tests/mocks/repository/expense.repository.mock';
-import {
-  mockUserRepository,
-  userRepositoryMock,
-} from '../../tests/mocks/repository/user.repository.mock';
+import { mocks } from '../../tests/mocks';
+import { mockExpenseRepository } from '../../tests/mocks/repository/expense.repository.mock';
+import { mockUserRepository } from '../../tests/mocks/repository/user.repository.mock';
 import { getApp } from '../server';
 
 describe('ExpenseController', () => {
@@ -35,9 +30,9 @@ describe('ExpenseController', () => {
       const accessToken = await jwtService.signAccessToken(user);
       const expenseDto = createExpenseDtoFactory();
       const expense = { ...expenseFactory(), ...expenseDto, user };
-      userRepositoryMock('findOneByUsername', user);
-      userRepositoryMock('findOneById', user);
-      expenseRepositoryMock('save', expense);
+      mocks.userRepository('findOneByUsername', user);
+      mocks.userRepository('findOneById', user);
+      mocks.expenseRepository('save', expense);
 
       const { status, body } = await request
         .post('/expenses')
@@ -52,7 +47,7 @@ describe('ExpenseController', () => {
     it('should successfully list expenses', async () => {
       const numberOfExpenses = 5;
       const expenses = factoryMultiplier(expenseFactory, numberOfExpenses);
-      expenseRepositoryMock('find', expenses);
+      mocks.expenseRepository('find', expenses);
 
       const { status, body } = await request.get('/expenses');
 
@@ -65,7 +60,7 @@ describe('ExpenseController', () => {
     it('should successfully find an expense', async () => {
       const expense = expenseFactory();
       const user = userFactory();
-      expenseRepositoryMock('findOneById', { ...expense, user });
+      mocks.expenseRepository('findOneById', { ...expense, user });
 
       const { status, body } = await request.get(`/expenses/${expense.id}`);
 
@@ -80,9 +75,9 @@ describe('ExpenseController', () => {
       const user = userFactory();
       const expense = expenseFactory();
       const accessToken = await jwtService.signAccessToken(user);
-      userRepositoryMock('findOneByUsername', user);
-      expenseRepositoryMock('findOneById', { ...expense, user });
-      expenseRepositoryMock('remove', expense);
+      mocks.userRepository('findOneByUsername', user);
+      mocks.expenseRepository('findOneById', { ...expense, user });
+      mocks.expenseRepository('remove', expense);
 
       const { status, body } = await request
         .delete(`/expenses/${expense.id}`)
@@ -90,6 +85,20 @@ describe('ExpenseController', () => {
 
       expect(status).toBe(204);
       expect(body).toEqual({});
+    });
+  });
+  describe('getByMonth', () => {
+    it('should successfully get expenses by month', async () => {
+      const accessToken = await jwtService.signAccessToken(userFactory());
+      const expenses = factoryMultiplier(expenseFactory, 5);
+      mocks.expenseRepository('getByMonth', expenses);
+
+      const { status, body } = await request
+        .get('/expenses/month/5/2021')
+        .set({ Authorization: `Bearer ${accessToken}` });
+
+      expect(status).toBe(200);
+      expect(body.length).toEqual(5);
     });
   });
 });

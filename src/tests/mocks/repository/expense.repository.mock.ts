@@ -5,3 +5,11 @@ export const mockExpenseRepository = () => {
     expenseRepository[key as keyof typeof expenseRepository] = jest.fn();
   }
 };
+export const expenseRepositoryMock = (
+  methodName: keyof typeof expenseRepository,
+  resultValue: any = {},
+) => {
+  return jest
+    .spyOn(expenseRepository, methodName)
+    .mockResolvedValue(resultValue);
+};

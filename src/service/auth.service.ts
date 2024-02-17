@@ -65,14 +65,11 @@ const refreshAccessToken = async (refreshToken: string) => {
 };
 
 const findUserByUsername = async (username: string) => {
-  try {
-    return await userService.findByUsername(username);
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      throw new InvalidCredentialsError();
-    }
-    throw error;
+  const user = await userRepository.findOneByUsername(username);
+  if (!user) {
+    throw new InvalidCredentialsError();
   }
+  return user;
 };
 
 export const authService = {

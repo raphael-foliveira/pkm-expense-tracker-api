@@ -9,7 +9,6 @@ import { jwtService } from '../../service/jwt.service';
 import { signupDtoFactory } from '../../stubs/auth';
 import { userFactory } from '../../stubs/user';
 import { mocks } from '../../tests/mocks';
-import { mockUserRepository } from '../../tests/mocks/repository/user.repository.mock';
 import { getApp } from '../server';
 
 describe('AuthController', () => {
@@ -17,7 +16,6 @@ describe('AuthController', () => {
   let request: TestAgent<supertest.Test>;
 
   beforeAll(async () => {
-    mockUserRepository();
     app = getApp();
     request = supertest(app);
   });

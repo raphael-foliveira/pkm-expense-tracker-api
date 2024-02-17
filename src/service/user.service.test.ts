@@ -3,12 +3,11 @@ config({ path: '.env.test' });
 
 import { userFactory } from '../stubs/user';
 import { mocks } from '../tests/mocks';
-import { mockUserRepository } from '../tests/mocks/repository/user.repository.mock';
 import { userService } from './user.service';
 
 describe('UserService', () => {
-  beforeAll(() => {
-    mockUserRepository();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
   it('should find a user by username', async () => {
     const createdUser = userFactory();

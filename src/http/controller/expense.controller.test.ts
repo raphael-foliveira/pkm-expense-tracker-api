@@ -9,8 +9,6 @@ import { factoryMultiplier } from '../../stubs/common';
 import { createExpenseDtoFactory, expenseFactory } from '../../stubs/expense';
 import { userFactory } from '../../stubs/user';
 import { mocks } from '../../tests/mocks';
-import { mockExpenseRepository } from '../../tests/mocks/repository/expense.repository.mock';
-import { mockUserRepository } from '../../tests/mocks/repository/user.repository.mock';
 import { getApp } from '../server';
 
 describe('ExpenseController', () => {
@@ -18,8 +16,6 @@ describe('ExpenseController', () => {
   let request: TestAgent<supertest.Test>;
 
   beforeAll(async () => {
-    mockUserRepository();
-    mockExpenseRepository();
     app = getApp();
     request = supertest(app);
   });

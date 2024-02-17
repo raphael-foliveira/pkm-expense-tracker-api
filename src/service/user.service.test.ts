@@ -1,13 +1,10 @@
 import { config } from 'dotenv';
 config({ path: '.env.test' });
 
-import { userService } from './user.service';
-import { userRepository } from '../persistence/repository/user';
 import { userFactory } from '../stubs/user';
-import {
-  mockUserRepository,
-  userRepositoryMock,
-} from '../tests/mocks/repository/user.repository.mock';
+import { mocks } from '../tests/mocks';
+import { mockUserRepository } from '../tests/mocks/repository/user.repository.mock';
+import { userService } from './user.service';
 
 describe('UserService', () => {
   beforeAll(() => {
@@ -15,7 +12,7 @@ describe('UserService', () => {
   });
   it('should find a user by username', async () => {
     const createdUser = userFactory();
-    userRepositoryMock('findOneByUsername', createdUser);
+    mocks.userRepository('findOneByUsername', createdUser);
     const user = await userService.findByUsername(createdUser.username);
 
     expect(user.username).toEqual(createdUser.username);
@@ -23,7 +20,7 @@ describe('UserService', () => {
 
   it('should find a user by id', async () => {
     const createdUser = userFactory();
-    userRepositoryMock('findOneById', createdUser);
+    mocks.userRepository('findOneById', createdUser);
     const foundUser = await userService.findById(createdUser.id!);
 
     expect(foundUser.id).toEqual(createdUser.id);

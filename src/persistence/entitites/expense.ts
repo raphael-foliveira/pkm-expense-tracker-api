@@ -8,21 +8,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user';
+import { BaseEntity } from './base-entity';
 
 @Entity()
-export class Expense {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @CreateDateColumn()
-  createdAt?: Date;
-
-  @UpdateDateColumn()
-  updatedAt?: Date;
-
-  @DeleteDateColumn()
-  deletedAt?: Date;
-
+export class Expense extends BaseEntity {
   @Column({ type: 'float' })
   price: number;
 

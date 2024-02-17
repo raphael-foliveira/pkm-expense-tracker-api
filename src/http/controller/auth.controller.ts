@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from 'express';
-import { userMapper } from './mappers/user';
-import { authService } from '../../service/auth';
+import { userMapper } from './mappers/user.mapper';
+import { authService } from '../../service/auth.service';
 
 const signup = async ({ body }: Request, res: Response) => {
   const tokens = await authService.signup(body);

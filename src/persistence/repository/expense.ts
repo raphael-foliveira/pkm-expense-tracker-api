@@ -1,4 +1,4 @@
-import { GetByMonthProps } from '../../service/expense';
+import { GetByMonthProps } from '../../service/expense.service';
 import { dataSource } from '../data-source';
 import { Expense } from '../entitites/expense';
 import datefns from 'date-fns';

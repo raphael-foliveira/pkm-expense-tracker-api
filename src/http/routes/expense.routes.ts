@@ -1,11 +1,14 @@
 import { Router } from 'express';
-import { CreateExpenseSchema, GetByMonthSchema } from '../schemas/expense';
 import { useHandler } from '../helpers/handler';
-import { AuthorizationSchema } from '../schemas/auth';
+import { AuthorizationSchema } from '../schemas/auth.schemas';
 import { IdParamSchema } from '../schemas/common';
-import { expenseController } from '../controller/expense';
-import { validate } from '../middleware/validation';
-import { authMiddleware } from '../middleware/auth';
+import { expenseController } from '../controller/expense.controller';
+import { validate } from '../middleware/validation.middleware';
+import { authMiddleware } from '../middleware/auth.middleware';
+import {
+  CreateExpenseSchema,
+  GetByMonthSchema,
+} from '../schemas/expense.schemas';
 
 export const expenseRouter = Router();
 

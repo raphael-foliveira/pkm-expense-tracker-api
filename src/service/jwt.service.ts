@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from './types/jwt-payload';
 import { InvalidTokenError } from './errors/jwt';
-import { config } from './config';
+import { config } from './config.service';
 
 const { accessToken, refreshToken } = config.secrets;
 

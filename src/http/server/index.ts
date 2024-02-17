@@ -1,10 +1,10 @@
 import cors from 'cors';
 import express from 'express';
 import { dataSource } from '../../persistence/data-source';
-import { errorHandlingMiddleware } from '../middleware/error-handling';
-import { healthcheckRouter } from '../routes/healthcheck';
-import { authRouter } from '../routes/auth';
-import { expenseRouter } from '../routes/expense';
+import { errorHandlingMiddleware } from '../middleware/error-handling.middleware';
+import { healthcheckRouter } from '../routes/healthcheck.routes';
+import { authRouter } from '../routes/auth.routes';
+import { expenseRouter } from '../routes/expense.routes';
 
 export const getApp = () => {
   const app = express();

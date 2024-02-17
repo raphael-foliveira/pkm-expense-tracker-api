@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { expenseMapper } from './mappers/expense';
-import { expenseService } from '../../service/expense';
-import { authService } from '../../service/auth';
+import { expenseMapper } from './mappers/expense.mapper';
+import { expenseService } from '../../service/expense.service';
+import { authService } from '../../service/auth.service';
 
 const create = async (
   { body, headers: { authorization } }: Request,

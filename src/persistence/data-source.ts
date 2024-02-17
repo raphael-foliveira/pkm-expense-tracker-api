@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { User } from './entitites/user';
 import { Expense } from './entitites/expense';
-import { config } from '../service/config';
+import { config } from '../service/config.service';
 
 const entities = [User, Expense];
 

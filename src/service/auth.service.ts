@@ -4,8 +4,6 @@ import { LoginDto, SignupDto } from './dto/auth';
 import { InvalidCredentialsError } from './errors/auth';
 import { InvalidTokenError } from './errors/jwt';
 import { jwtService } from './jwt.service';
-import { userService } from './user.service';
-import { NotFoundError } from './errors/common';
 
 const signup = async (signupData: SignupDto) => {
   const password = await bcrypt.hash(signupData.password, 10);

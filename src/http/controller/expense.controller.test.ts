@@ -5,11 +5,14 @@ import { Express } from 'express';
 import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 import { jwtService } from '../../service/jwt.service';
-import { factoryMultiplier } from '../../stubs/common';
-import { createExpenseDtoFactory, expenseFactory } from '../../stubs/expense';
-import { userFactory } from '../../stubs/user';
 import { mocks } from '../../tests/mocks';
 import { getApp } from '../server/server';
+import { factoryMultiplier } from '../../tests/stubs/common';
+import {
+  createExpenseDtoFactory,
+  expenseFactory,
+} from '../../tests/stubs/expense';
+import { userFactory } from '../../tests/stubs/user';
 
 describe('ExpenseController', () => {
   let app: Express;

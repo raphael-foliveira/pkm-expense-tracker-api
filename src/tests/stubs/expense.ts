@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { CreateExpenseDto } from '../service/dto/expense';
-import { Expense } from '../persistence/entitites/expense';
+import { Expense } from '../../persistence/entitites/expense';
+import { CreateExpenseDto } from '../../service/dto/expense';
 
 export const createExpenseDtoFactory = (): CreateExpenseDto => {
   return {

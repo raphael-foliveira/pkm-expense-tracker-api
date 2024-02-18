@@ -1,9 +1,9 @@
 import { config } from 'dotenv';
 config({ path: '.env.test' });
 
-import { userFactory } from '../stubs/user';
 import { mocks } from '../tests/mocks';
 import { userService } from './user.service';
+import { userFactory } from '../tests/stubs/user';
 
 describe('UserService', () => {
   afterEach(() => {

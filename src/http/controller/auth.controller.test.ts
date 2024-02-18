@@ -6,10 +6,10 @@ import { Express } from 'express';
 import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 import { jwtService } from '../../service/jwt.service';
-import { signupDtoFactory } from '../../stubs/auth';
-import { userFactory } from '../../stubs/user';
 import { mocks } from '../../tests/mocks';
 import { getApp } from '../server/server';
+import { userFactory } from '../../tests/stubs/user';
+import { signupDtoFactory } from '../../tests/stubs/auth';
 
 describe('AuthController', () => {
   let app: Express;

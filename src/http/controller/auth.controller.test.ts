@@ -9,7 +9,7 @@ import { jwtService } from '../../service/jwt.service';
 import { signupDtoFactory } from '../../stubs/auth';
 import { userFactory } from '../../stubs/user';
 import { mocks } from '../../tests/mocks';
-import { getApp } from '../server';
+import { getApp } from '../server/server';
 
 describe('AuthController', () => {
   let app: Express;

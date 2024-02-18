@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "./dist/index.js",
-    "dev": "nodemon ./src/index.ts",
+    "start": "./dist/main.js",
+    "dev": "nodemon ./src/main.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "eslint . --ext .ts --fix"

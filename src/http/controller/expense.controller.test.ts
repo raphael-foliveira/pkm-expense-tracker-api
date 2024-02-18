@@ -9,7 +9,7 @@ import { factoryMultiplier } from '../../stubs/common';
 import { createExpenseDtoFactory, expenseFactory } from '../../stubs/expense';
 import { userFactory } from '../../stubs/user';
 import { mocks } from '../../tests/mocks';
-import { getApp } from '../server';
+import { getApp } from '../server/server';
 
 describe('ExpenseController', () => {
   let app: Express;

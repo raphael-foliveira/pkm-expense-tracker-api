@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, z } from 'zod';
 
-const wrapValidation = (fn: (r: Request, s: AnyZodObject) => void) => {
+type ValidationFunction = (req: Request, schema: AnyZodObject) => void;
+
+const wrapValidation = (fn: ValidationFunction) => {
   return (schema: AnyZodObject) => {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {

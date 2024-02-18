@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { User } from '../persistence/entitites/user';
 import { hashSync } from 'bcryptjs';
+import { User } from '../../persistence/entitites/user';
 
 export const userFactory = (): User => {
   const password = hashSync(faker.internet.password(), 10);

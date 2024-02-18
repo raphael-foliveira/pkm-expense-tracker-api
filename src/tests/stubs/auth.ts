@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { SignupDto } from '../service/dto/auth';
+import { SignupDto } from '../../service/dto/auth';
 
 export const signupDtoFactory = (): SignupDto => {
   return {

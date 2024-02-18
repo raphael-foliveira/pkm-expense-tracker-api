@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { userRepository } from '../persistence/repository/user';
+import { userRepository } from '../persistence/repository/user.repository';
 import { LoginDto, SignupDto } from './dto/auth';
 import { InvalidCredentialsError } from './errors/auth';
 import { InvalidTokenError } from './errors/jwt';

@@ -1,4 +1,4 @@
-import { expenseRepository } from '../../../persistence/repository/expense';
+import { expenseRepository } from '../../../persistence/repository/expense.repository';
 
 export const expenseRepositoryMock = (
   methodName: keyof typeof expenseRepository,

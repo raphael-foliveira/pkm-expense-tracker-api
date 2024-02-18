@@ -1,4 +1,4 @@
-import { userRepository } from '../../../persistence/repository/user';
+import { userRepository } from '../../../persistence/repository/user.repository';
 
 export const userRepositoryMock = (
   methodName: keyof typeof userRepository,

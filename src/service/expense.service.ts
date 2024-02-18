@@ -1,6 +1,6 @@
 import { Expense } from '../persistence/entitites/expense';
-import { expenseRepository } from '../persistence/repository/expense';
-import { userRepository } from '../persistence/repository/user';
+import { expenseRepository } from '../persistence/repository/expense.repository';
+import { userRepository } from '../persistence/repository/user.repository';
 import { CreateExpenseDto, UpdateExpenseDto } from './dto/expense';
 import { ForbiddenError, NotFoundError } from './errors/common';
 

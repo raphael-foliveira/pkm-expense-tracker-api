@@ -1,5 +1,5 @@
 import { User } from '../persistence/entitites/user';
-import { userRepository } from '../persistence/repository/user';
+import { userRepository } from '../persistence/repository/user.repository';
 import { NotFoundError } from './errors/common';
 
 const findByEmail = async (email: string) => {

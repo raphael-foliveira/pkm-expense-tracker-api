@@ -3,8 +3,8 @@ import { userRepository } from '../persistence/repository/user';
 import { LoginDto, SignupDto } from './dto/auth';
 import { InvalidCredentialsError } from './errors/auth';
 import { InvalidTokenError } from './errors/jwt';
-import { jwtService } from './jwt';
-import { userService } from './user';
+import { jwtService } from './jwt.service';
+import { userService } from './user.service';
 import { NotFoundError } from './errors/common';
 
 const signup = async (signupData: SignupDto) => {

@@ -6,8 +6,8 @@ import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 import { dataSource } from '../../persistence/data-source';
 import { truncateTables } from '../../persistence/helpers';
-import { authService } from '../../service/auth';
-import { jwtService } from '../../service/jwt';
+import { authService } from '../../service/auth.service';
+import { jwtService } from '../../service/jwt.service';
 import { signupDtoFactory } from '../../stubs/auth';
 import { getApp } from '../server';
 

@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { authController } from '../controller/auth';
+import { authController } from '../controller/auth.controller';
 import { useHandler } from '../helpers/handler';
 import {
   AuthorizationSchema,
   LoginSchema,
   RefreshTokenSchema,
   SignupSchema,
-} from '../schemas/auth';
-import { validate } from '../middleware/validation';
+} from '../schemas/auth.schemas';
+import { validate } from '../middleware/validation.middleware';
 
 export const authRouter = Router();
 

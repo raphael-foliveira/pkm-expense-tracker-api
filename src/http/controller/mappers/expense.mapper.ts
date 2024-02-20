@@ -1,5 +1,5 @@
 import { Expense } from '../../../persistence/entitites/expense';
-import { userMapper, UserResponseDto } from './user';
+import { userMapper, UserResponseDto } from './user.mapper';
 
 export interface ExpenseResponseDto {
   id: number;

@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 config({ path: '.env.test' });
 
-import { userService } from './user';
+import { userService } from './user.service';
 import { dataSource } from '../persistence/data-source';
 import { userRepository } from '../persistence/repository/user';
 import { userFactory } from '../stubs/user';

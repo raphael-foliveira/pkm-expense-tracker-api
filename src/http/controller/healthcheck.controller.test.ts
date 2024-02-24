@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 config({ path: '.env.test' });
 
 import supertest from 'supertest';
-import { getApp } from '../server';
+import { getApp } from '../server/server';
 import TestAgent from 'supertest/lib/agent';
 
 describe('HealthCheckController', () => {

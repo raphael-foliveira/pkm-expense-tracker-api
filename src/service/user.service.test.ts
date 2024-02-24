@@ -1,29 +1,25 @@
 import { config } from 'dotenv';
 config({ path: '.env.test' });
 
+import { mocks } from '../tests/mocks';
 import { userService } from './user.service';
-import { dataSource } from '../persistence/data-source';
-import { userRepository } from '../persistence/repository/user';
-import { userFactory } from '../stubs/user';
+import { userFactory } from '../tests/stubs/user';
 
 describe('UserService', () => {
-  beforeAll(async () => {
-    await dataSource.initialize();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
-
-  afterAll(async () => {
-    await dataSource.close();
-  });
-
   it('should find a user by username', async () => {
-    const createdUser = await userRepository.save(await userFactory());
+    const createdUser = userFactory();
+    mocks.userRepository('findOneByUsername', createdUser);
     const user = await userService.findByUsername(createdUser.username);
 
     expect(user.username).toEqual(createdUser.username);
   });
 
   it('should find a user by id', async () => {
-    const createdUser = await userRepository.save(await userFactory());
+    const createdUser = userFactory();
+    mocks.userRepository('findOneById', createdUser);
     const foundUser = await userService.findById(createdUser.id!);
 
     expect(foundUser.id).toEqual(createdUser.id);

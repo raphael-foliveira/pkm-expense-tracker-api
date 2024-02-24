@@ -9,7 +9,8 @@ const checkToken: RequestHandler = async (
   try {
     await jwtService.verifyAccessToken(authorization!);
     return next();
-  } catch {
+  } catch (err) {
+    console.log(err);
     return res.status(401).json({ message: 'Unauthorized' });
   }
 };

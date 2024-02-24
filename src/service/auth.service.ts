@@ -1,11 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { userRepository } from '../persistence/repository/user';
+import { userRepository } from '../persistence/repository/user.repository';
 import { LoginDto, SignupDto } from './dto/auth';
 import { InvalidCredentialsError } from './errors/auth';
 import { InvalidTokenError } from './errors/jwt';
 import { jwtService } from './jwt.service';
-import { userService } from './user.service';
-import { NotFoundError } from './errors/common';
 
 const signup = async (signupData: SignupDto) => {
   const password = await bcrypt.hash(signupData.password, 10);
@@ -65,14 +63,11 @@ const refreshAccessToken = async (refreshToken: string) => {
 };
 
 const findUserByUsername = async (username: string) => {
-  try {
-    return await userService.findByUsername(username);
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      throw new InvalidCredentialsError();
-    }
-    throw error;
+  const user = await userRepository.findOneByUsername(username);
+  if (!user) {
+    throw new InvalidCredentialsError();
   }
+  return user;
 };
 
 export const authService = {

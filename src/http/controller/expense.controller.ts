@@ -8,7 +8,7 @@ const create = async (
   res: Response,
 ) => {
   const { id } = await authService.verifyAccessToken(authorization!);
-  const expense = await expenseService.create(body, id);
+  const expense = await expenseService.create(body, id!);
   return res.status(201).json(expenseMapper.toResponseDto(expense));
 };
 
@@ -27,7 +27,7 @@ const remove = async (
   res: Response,
 ) => {
   const user = await authService.verifyAccessToken(authorization!);
-  await expenseService.remove(+id, user.id);
+  await expenseService.remove(+id, user.id!);
   return res.status(204).send();
 };
 
@@ -39,7 +39,8 @@ const getByMonth = async (
     month: +month,
     year: +year,
   });
-  return res.status(200).json(expenses.map(expenseMapper.toResponseDto));
+  const mappedExpenses = expenses.map(expenseMapper.toResponseDto);
+  return res.status(200).json(mappedExpenses);
 };
 
 export const expenseController = {

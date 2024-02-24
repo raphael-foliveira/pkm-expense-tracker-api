@@ -1,37 +1,41 @@
 import { config } from 'dotenv';
 config({ path: './.env.test' });
 
+import { hashSync } from 'bcryptjs';
 import { Express } from 'express';
 import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
-import { dataSource } from '../../persistence/data-source';
-import { truncateTables } from '../../persistence/helpers';
-import { authService } from '../../service/auth.service';
 import { jwtService } from '../../service/jwt.service';
-import { signupDtoFactory } from '../../stubs/auth';
-import { getApp } from '../server';
+import { mocks } from '../../tests/mocks';
+import { getApp } from '../server/server';
+import { userFactory } from '../../tests/stubs/user';
+import { signupDtoFactory } from '../../tests/stubs/auth';
 
 describe('AuthController', () => {
   let app: Express;
   let request: TestAgent<supertest.Test>;
 
   beforeAll(async () => {
-    await dataSource.initialize();
     app = getApp();
     request = supertest(app);
   });
 
-  afterEach(async () => {
-    await truncateTables();
-  });
-
-  afterAll(async () => {
-    await dataSource.destroy();
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   describe('signup', () => {
     it('should return 201 with tokens when signup is successful', async () => {
       const signupPayload = signupDtoFactory();
+      const hashedPassword = hashSync(signupPayload.password, 10);
+      const returnedUser = {
+        ...userFactory(),
+        ...signupPayload,
+        password: hashedPassword,
+      };
+
+      mocks.userRepository('save', returnedUser);
+      mocks.userRepository('findOneByUsername', returnedUser);
 
       const { status, body } = await request
         .post('/auth/signup')
@@ -45,12 +49,16 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should return 200 with tokens when login is successful', async () => {
-      const fakeUser = signupDtoFactory();
-      await authService.signup(fakeUser);
-
+      const password = 'some_password';
+      const hashedPassword = hashSync(password, 10);
+      const user = userFactory();
+      mocks.userRepository('findOneByUsername', {
+        ...user,
+        password: hashedPassword,
+      });
       const { status, body } = await request
         .post('/auth/login')
-        .send({ username: fakeUser.username, password: fakeUser.password });
+        .send({ username: user.username, password });
 
       expect(status).toEqual(200);
       expect(body.tokens.accessToken).toBeDefined();
@@ -58,12 +66,12 @@ describe('AuthController', () => {
     });
 
     it('should return 401 when login fails', async () => {
-      const fakeUser = signupDtoFactory();
-      await authService.signup(fakeUser);
+      const user = userFactory();
+      mocks.userRepository('findOneByUsername', user);
 
       const { status } = await request
         .post('/auth/login')
-        .send({ username: fakeUser.username, password: 'wrong password' });
+        .send({ username: user.username, password: 'wrong password' });
 
       expect(status).toEqual(401);
     });
@@ -79,10 +87,9 @@ describe('AuthController', () => {
 
   describe('logout', () => {
     it('should return 200 when logout is successful', async () => {
-      const fakeUser = signupDtoFactory();
-      const {
-        tokens: { accessToken },
-      } = await authService.signup(fakeUser);
+      const user = userFactory();
+      const accessToken = await jwtService.signAccessToken(user);
+      mocks.userRepository('findOneByUsername', user);
 
       const { status, body } = await request
         .get('/auth/logout')
@@ -95,14 +102,13 @@ describe('AuthController', () => {
 
   describe('refreshAccessToken', () => {
     it('should return 201 with new access token when refresh token is valid', async () => {
-      const fakeUser = signupDtoFactory();
-      const {
-        tokens: { refreshToken },
-      } = await authService.signup(fakeUser);
+      const user = userFactory();
+      const refreshToken = await jwtService.signRefreshToken(user);
       const verifyRefreshTokenSpy = jest.spyOn(
         jwtService,
         'verifyRefreshToken',
       );
+      mocks.userRepository('findOneByUsername', { ...user, refreshToken });
 
       const { status, body } = await request
         .post('/auth/refresh-token')
@@ -116,21 +122,18 @@ describe('AuthController', () => {
 
   describe('Verify', () => {
     it('should return 200 with user data when access token is valid', async () => {
-      const fakeUser = signupDtoFactory();
-      const {
-        tokens: { accessToken },
-      } = await authService.signup(fakeUser);
+      const user = userFactory();
+      const accessToken = await jwtService.signAccessToken(user);
+      mocks.userRepository('findOneByUsername', user);
 
       const { status, body } = await request
         .get('/auth/verify')
         .set('Authorization', `Bearer ${accessToken}`);
 
       expect(status).toBe(200);
-      expect(body.email).toEqual(fakeUser.email);
-      expect(body.username).toEqual(fakeUser.username);
-      expect(body.fullName).toEqual(
-        `${fakeUser.firstName} ${fakeUser.lastName}`,
-      );
+      expect(body.email).toEqual(user.email);
+      expect(body.username).toEqual(user.username);
+      expect(body.fullName).toEqual(`${user.firstName} ${user.lastName}`);
     });
   });
 });

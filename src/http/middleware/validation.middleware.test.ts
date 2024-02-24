@@ -3,6 +3,10 @@ import { validate } from './validation.middleware';
 import { Request, Response } from 'express';
 
 describe('validation', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should throw an error when data is invalid', () => {
     const MockSchema = z.object({
       name: z.string(),

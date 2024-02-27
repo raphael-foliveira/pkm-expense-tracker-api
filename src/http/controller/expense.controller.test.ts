@@ -12,7 +12,7 @@ import {
   createExpenseDtoFactory,
   expenseFactory,
 } from '../../tests/stubs/expense';
-import { userFactory } from '../../tests/stubs/user';
+import { userFactory, userStub } from '../../tests/stubs/user';
 
 describe('ExpenseController', () => {
   let app: Express;
@@ -25,12 +25,11 @@ describe('ExpenseController', () => {
 
   describe('create', () => {
     it('should successfully create and expense', async () => {
-      const user = userFactory();
-      const accessToken = await jwtService.signAccessToken(user);
+      const accessToken = await jwtService.signAccessToken(userStub);
       const expenseDto = createExpenseDtoFactory();
-      const expense = { ...expenseFactory(), ...expenseDto, user };
-      mocks.userRepository('findOneByUsername', user);
-      mocks.userRepository('findOneById', user);
+      const expense = { ...expenseFactory(), ...expenseDto, user: userStub };
+      mocks.userRepository('findOneByUsername', userStub);
+      mocks.userRepository('findOneById', userStub);
       mocks.expenseRepository('save', expense);
 
       const { status, body } = await request
@@ -40,7 +39,7 @@ describe('ExpenseController', () => {
 
       expect(status).toBe(201);
       expect(body.price).toEqual(expenseDto.price);
-      expect(body.createdBy.username).toEqual(user.username);
+      expect(body.createdBy.username).toEqual(userStub.username);
     });
 
     it('should successfully list expenses', async () => {
@@ -58,24 +57,22 @@ describe('ExpenseController', () => {
   describe('findOne', () => {
     it('should successfully find an expense', async () => {
       const expense = expenseFactory();
-      const user = userFactory();
-      mocks.expenseRepository('findOneById', { ...expense, user });
+      mocks.expenseRepository('findOneById', { ...expense, user: userStub });
 
       const { status, body } = await request.get(`/expenses/${expense.id}`);
 
       expect(status).toBe(200);
       expect(body.price).toEqual(expense.price);
-      expect(body.createdBy.username).toEqual(user.username);
+      expect(body.createdBy.username).toEqual(userStub.username);
     });
   });
 
   describe('delete', () => {
     it('should successfully delete an expense', async () => {
-      const user = userFactory();
       const expense = expenseFactory();
-      const accessToken = await jwtService.signAccessToken(user);
-      mocks.userRepository('findOneByUsername', user);
-      mocks.expenseRepository('findOneById', { ...expense, user });
+      const accessToken = await jwtService.signAccessToken(userStub);
+      mocks.userRepository('findOneByUsername', userStub);
+      mocks.expenseRepository('findOneById', { ...expense, user: userStub });
       mocks.expenseRepository('remove', expense);
 
       const { status, body } = await request

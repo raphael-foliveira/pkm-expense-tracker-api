@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { expenseMapper } from './mappers/expense.mapper';
 import { expenseService } from '../../service/expense.service';
 import { authService } from '../../service/auth.service';
+import { response } from './responses/responses';
 
 const create = async (
   { body, headers: { authorization } }: Request,
@@ -9,17 +10,17 @@ const create = async (
 ) => {
   const { id } = await authService.verifyAccessToken(authorization!);
   const expense = await expenseService.create(body, id!);
-  return res.status(201).json(expenseMapper.toResponseDto(expense));
+  return response.created(res, expenseMapper.toResponseDto(expense));
 };
 
 const find = async ({ query }: Request, res: Response) => {
   const expenses = await expenseService.find(query);
-  return res.status(200).json(expenses.map(expenseMapper.toResponseDto));
+  return response.ok(res, expenses.map(expenseMapper.toResponseDto));
 };
 
 const findOne = async ({ params: { id } }: Request, res: Response) => {
   const expense = await expenseService.findOne(+id);
-  return res.status(200).json(expenseMapper.toResponseDto(expense));
+  return response.ok(res, expenseMapper.toResponseDto(expense));
 };
 
 const remove = async (
@@ -28,7 +29,7 @@ const remove = async (
 ) => {
   const user = await authService.verifyAccessToken(authorization!);
   await expenseService.remove(+id, user.id!);
-  return res.status(204).send();
+  return response.noContent(res);
 };
 
 const getByMonth = async (
@@ -40,7 +41,7 @@ const getByMonth = async (
     year: +year,
   });
   const mappedExpenses = expenses.map(expenseMapper.toResponseDto);
-  return res.status(200).json(mappedExpenses);
+  return response.ok(res, mappedExpenses);
 };
 
 export const expenseController = {

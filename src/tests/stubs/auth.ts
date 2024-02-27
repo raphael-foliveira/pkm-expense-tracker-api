@@ -10,3 +10,5 @@ export const signupDtoFactory = (): SignupDto => {
     password: faker.internet.password(),
   };
 };
+
+export const signupDtoStub = signupDtoFactory();

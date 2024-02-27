@@ -10,6 +10,8 @@ export const createExpenseDtoFactory = (): CreateExpenseDto => {
   };
 };
 
+export const createExpenseDtoStub = createExpenseDtoFactory();
+
 export const expenseFactory = (): Expense => {
   return {
     id: faker.number.int({ max: 10000 }),
@@ -19,3 +21,5 @@ export const expenseFactory = (): Expense => {
     createdAt: faker.date.recent(),
   };
 };
+
+export const expenseStub = expenseFactory();

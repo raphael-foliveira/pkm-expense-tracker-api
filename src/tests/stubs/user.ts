@@ -15,3 +15,5 @@ export const userFactory = (): User => {
     expenses: [],
   };
 };
+
+export const userStub = userFactory();

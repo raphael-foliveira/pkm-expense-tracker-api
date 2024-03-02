@@ -26,8 +26,17 @@ const findById = async (id: number) => {
   return user as Required<User>;
 };
 
+const remove = async (id: number) => {
+  const user = await userRepository.findOneById(id);
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+  await userRepository.remove(id);
+};
+
 export const userService = {
   findByEmail,
   findByUsername,
   findById,
+  remove,
 };

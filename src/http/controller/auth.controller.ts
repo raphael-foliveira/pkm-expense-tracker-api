@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import { userMapper } from './mappers/user.mapper';
 import { authService } from '../../service/auth.service';
+import { userService } from '../../service/user.service';
 
 const signup = async ({ body }: Request, res: Response) => {
   const tokens = await authService.signup(body);
@@ -37,10 +38,19 @@ const verify: RequestHandler = async (
   return res.status(200).json(userResponseDto);
 };
 
+const deleteUser: RequestHandler = async (
+  { params: { id } }: Request,
+  res: Response,
+) => {
+  await userService.remove(+id);
+  return res.sendStatus(204);
+};
+
 export const authController = {
   signup,
   login,
   logout,
   refreshAccessToken,
   verify,
+  deleteUser,
 };

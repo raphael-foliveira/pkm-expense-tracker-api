@@ -59,7 +59,7 @@ const refreshAccessToken = async (refreshToken: string) => {
     firstName,
     lastName,
   });
-  return { accessToken };
+  return accessToken;
 };
 
 const findUserByUsername = async (username: string) => {

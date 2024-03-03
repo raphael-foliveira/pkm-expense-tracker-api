@@ -24,8 +24,8 @@ const refreshAccessToken = async (
   { body: { refreshToken } }: Request,
   res: Response,
 ) => {
-  const tokens = await authService.refreshAccessToken(refreshToken);
-  return res.status(201).json(tokens);
+  const accessToken = await authService.refreshAccessToken(refreshToken);
+  return res.status(201).json({ accessToken });
 };
 
 const verify: RequestHandler = async (

@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 
-const get = (req: Request, res: Response) => {
+const get: RequestHandler = (req, res) => {
   return res.status(200).json({ status: 'ok' });
 };
 

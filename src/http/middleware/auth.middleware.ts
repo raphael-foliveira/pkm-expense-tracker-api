@@ -2,9 +2,9 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { jwtService } from '../../service/jwt.service';
 
 const checkToken: RequestHandler = async (
-  { headers: { authorization } }: Request,
-  res: Response,
-  next: NextFunction,
+  { headers: { authorization } },
+  res,
+  next,
 ) => {
   try {
     await jwtService.verifyAccessToken(authorization!);
@@ -14,6 +14,12 @@ const checkToken: RequestHandler = async (
     return res.status(401).json({ message: 'Unauthorized' });
   }
 };
+
+const checkApiKey: RequestHandler = async (
+  { headers: { ['x-api-key']: apiKey } },
+  res,
+  next,
+) => {};
 
 export const authMiddleware = {
   checkToken,

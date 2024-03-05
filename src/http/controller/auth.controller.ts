@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { authService } from '../../service/auth.service';
 import { userMapper } from './mappers/user.mapper';
+import { userService } from '../../service/user.service';
 
 const signup: RequestHandler = async ({ body }, res) => {
   const tokens = await authService.signup(body);
@@ -31,10 +32,16 @@ const verify: RequestHandler = async ({ headers: { authorization } }, res) => {
   return res.status(200).json(userResponseDto);
 };
 
+const deleteUser: RequestHandler = async ({ params: { id } }, res) => {
+  await userService.remove(+id);
+  return res.sendStatus(204);
+};
+
 export const authController = {
   signup,
   login,
   logout,
   refreshAccessToken,
   verify,
+  deleteUser,
 };

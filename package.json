@@ -7,6 +7,7 @@
     "start": "./dist/main.js",
     "dev": "nodemon ./src/main.ts",
     "test": "jest",
+    "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
     "lint": "eslint . --ext .ts --fix"
   },
@@ -15,7 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "@types/cors": "^2.8.17",
-    "@types/date-fns": "^2.6.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "date-fns": "^3.2.0",

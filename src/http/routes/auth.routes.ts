@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authController } from '../controller/auth.controller';
 import { useHandler } from '../helpers/handler';
 import {
+  ApiKeySchema,
   AuthorizationSchema,
   LoginSchema,
   RefreshTokenSchema,
@@ -45,5 +46,6 @@ authRouter.get(
 authRouter.delete(
   '/user/:id',
   validate.params(IdParamSchema),
+  validate.headers(ApiKeySchema),
   useHandler(authController.deleteUser),
 );

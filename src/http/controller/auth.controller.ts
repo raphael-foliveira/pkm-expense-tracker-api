@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { authService } from '../../service/auth.service';
-import { userService } from '../../service/user.service';
 import { userMapper } from './mappers/user.mapper';
+import { userService } from '../../service/user.service';
 
 const signup: RequestHandler = async ({ body }, res) => {
   const tokens = await authService.signup(body);
@@ -22,8 +22,8 @@ const refreshAccessToken: RequestHandler = async (
   { body: { refreshToken } },
   res,
 ) => {
-  const tokens = await authService.refreshAccessToken(refreshToken);
-  return res.status(201).json(tokens);
+  const accessToken = await authService.refreshAccessToken(refreshToken);
+  return res.status(201).json({ accessToken });
 };
 
 const verify: RequestHandler = async ({ headers: { authorization } }, res) => {

@@ -11,9 +11,9 @@ const environment = {
 };
 
 const database = {
-  user: get('POSTGRES_USER'),
+  username: get('POSTGRES_USER'),
   password: get('POSTGRES_PASSWORD'),
-  name: get('POSTGRES_DB'),
+  database: get('POSTGRES_DB'),
   host: get('POSTGRES_HOST'),
   port: parseInt(get('POSTGRES_PORT')),
 };
@@ -23,8 +23,11 @@ const secrets = {
   refreshToken: get('REFRESH_TOKEN_SECRET'),
 };
 
+const isProductionEnvironment = () => environment.nodeEnv === 'production';
+
 export const config = {
   get,
+  isProductionEnvironment,
   environment,
   database,
   secrets,

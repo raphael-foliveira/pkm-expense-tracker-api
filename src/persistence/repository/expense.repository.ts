@@ -10,7 +10,7 @@ class ExpenseRepository extends BaseRepository<Expense> {
     super(repository);
   }
 
-  findOneById(id: number) {
+  findOneByIdWithUser(id: number) {
     return this.repository.findOne({
       where: { id },
       relations: ['user'],

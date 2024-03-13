@@ -24,7 +24,7 @@ const update = async (id: number, expense: UpdateExpenseDto) => {
 };
 
 const findOne = async (id: number) => {
-  const expense = await expenseRepository.findOneById(id);
+  const expense = await expenseRepository.findOneByIdWithUser(id);
   if (!expense) {
     throw new NotFoundError('Expense not found');
   }

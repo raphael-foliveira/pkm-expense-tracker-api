@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
-import { authService } from '../../service/auth.service';
-import { expenseService } from '../../service/expense.service';
+import authService from '../../service/auth.service';
+import expenseService from '../../service/expense.service';
 import { expenseMapper } from './mappers/expense.mapper';
 
 const create: RequestHandler = async (

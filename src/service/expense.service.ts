@@ -60,11 +60,4 @@ const getByMonth = async (getByMonthProps: GetByMonthProps) => {
   return expenseRepository.getByMonth(getByMonthProps);
 };
 
-export const expenseService = {
-  create,
-  update,
-  findOne,
-  find,
-  remove,
-  getByMonth,
-};
+export default { create, update, findOne, find, remove, getByMonth };

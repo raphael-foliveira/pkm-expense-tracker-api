@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import { dataSource } from '../../persistence/data-source';
+import dataSource from '../../persistence/data-source';
 import { errorHandlingMiddleware } from '../middleware/error-handling.middleware';
 import { healthcheckRouter } from '../routes/healthcheck.routes';
 import { authRouter } from '../routes/auth.routes';

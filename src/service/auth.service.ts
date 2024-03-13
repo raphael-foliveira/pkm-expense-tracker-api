@@ -3,7 +3,7 @@ import { userRepository } from '../persistence/repository/user.repository';
 import { LoginDto, SignupDto } from './dto/auth';
 import { InvalidCredentialsError } from './errors/auth';
 import { InvalidTokenError } from './errors/jwt';
-import { jwtService } from './jwt.service';
+import jwtService from './jwt.service';
 
 const signup = async (signupData: SignupDto) => {
   const password = await bcrypt.hash(signupData.password, 10);
@@ -70,10 +70,4 @@ const findUserByUsername = async (username: string) => {
   return user;
 };
 
-export const authService = {
-  signup,
-  login,
-  logout,
-  verifyAccessToken,
-  refreshAccessToken,
-};
+export default { signup, login, logout, verifyAccessToken, refreshAccessToken };

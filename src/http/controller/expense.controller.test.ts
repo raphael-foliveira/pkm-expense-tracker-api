@@ -4,7 +4,7 @@ config({ path: './.env.test' });
 import { Express } from 'express';
 import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
-import { jwtService } from '../../service/jwt.service';
+import jwtService from '../../service/jwt.service';
 import { mocks } from '../../tests/mocks';
 import { getApp } from '../server/server';
 import { factoryMultiplier } from '../../tests/stubs/common';

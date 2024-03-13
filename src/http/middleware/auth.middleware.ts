@@ -1,5 +1,5 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { jwtService } from '../../service/jwt.service';
+import { RequestHandler } from 'express';
+import jwtService from '../../service/jwt.service';
 
 const checkToken: RequestHandler = async (
   { headers: { authorization } },

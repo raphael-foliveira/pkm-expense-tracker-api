@@ -5,7 +5,7 @@ import { hashSync } from 'bcryptjs';
 import { Express } from 'express';
 import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
-import { jwtService } from '../../service/jwt.service';
+import jwtService from '../../service/jwt.service';
 import { mocks } from '../../tests/mocks';
 import { getApp } from '../server/server';
 import { userFactory } from '../../tests/stubs/user';

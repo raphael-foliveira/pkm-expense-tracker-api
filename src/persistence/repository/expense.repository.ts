@@ -1,7 +1,7 @@
 import datefns from 'date-fns';
 import { FindOneOptions, Repository } from 'typeorm';
 import { GetByMonthProps } from '../../service/expense.service';
-import { dataSource } from '../data-source';
+import dataSource from '../data-source';
 import { Expense } from '../entitites/expense';
 import { BaseRepository } from './base.repository';
 

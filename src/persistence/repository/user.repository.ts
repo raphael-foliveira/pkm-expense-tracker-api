@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { User } from '../entitites/user';
 import { BaseRepository } from './base.repository';
-import { dataSource } from '../data-source';
+import dataSource from '../data-source';
 
 class UserRepository extends BaseRepository<User> {
   constructor(repository: Repository<User>) {

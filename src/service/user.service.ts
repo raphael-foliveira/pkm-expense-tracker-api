@@ -34,9 +34,4 @@ const remove = async (id: number) => {
   await userRepository.remove(id);
 };
 
-export const userService = {
-  findByEmail,
-  findByUsername,
-  findById,
-  remove,
-};
+export default { findByEmail, findByUsername, findById, remove };

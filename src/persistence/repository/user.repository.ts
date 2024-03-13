@@ -1,40 +1,21 @@
-import { dataSource } from '../data-source';
+import { Repository } from 'typeorm';
 import { User } from '../entitites/user';
+import { BaseRepository } from './base.repository';
+import { dataSource } from '../data-source';
 
-const repository = dataSource.getRepository(User);
+class UserRepository extends BaseRepository<User> {
+  constructor(repository: Repository<User>) {
+    super(repository);
+  }
+  findOneByEmail(email: string) {
+    return this.repository.findOne({ where: { email } });
+  }
 
-const findOneByEmail = (email: string) => {
-  return repository.findOne({ where: { email } });
-};
+  findOneByUsername(username: string) {
+    return this.repository.findOne({ where: { username } });
+  }
+}
 
-const findOneByUsername = (username: string) => {
-  return repository.findOne({ where: { username } });
-};
-
-const save = (entity: User) => {
-  return repository.save(entity);
-};
-
-const findOneById = (id: number) => {
-  return repository.findOne({ where: { id } });
-};
-
-const find = (filter: Partial<User>) => {
-  return repository.find({ where: filter });
-};
-
-const remove = async (id: number) => {
-  const user = await findOneById(id);
-  if (!user) return null;
-  await repository.delete(id);
-  return user;
-};
-
-export const userRepository = {
-  findOneByEmail,
-  findOneByUsername,
-  save,
-  findOneById,
-  find,
-  remove,
-};
+export const userRepository = new UserRepository(
+  dataSource.getRepository(User),
+);

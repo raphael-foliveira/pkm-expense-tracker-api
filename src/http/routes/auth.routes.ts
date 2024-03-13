@@ -8,7 +8,7 @@ import {
   RefreshTokenSchema,
   SignupSchema,
 } from '../schemas/auth.schemas';
-import { validate } from '../middleware/validation.middleware';
+import validate from '../middleware/validation.middleware';
 import { IdParamSchema } from '../schemas/common';
 
 export const authRouter = Router();

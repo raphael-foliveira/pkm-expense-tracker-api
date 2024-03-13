@@ -1,7 +1,7 @@
 import { ErrorRequestHandler } from 'express';
 import { HttpError } from '../exceptions/http-error';
 
-export const errorHandlingMiddleware: ErrorRequestHandler = (
+const errorHandlingMiddleware: ErrorRequestHandler = (
   error,
   req,
   res,
@@ -19,3 +19,5 @@ export const errorHandlingMiddleware: ErrorRequestHandler = (
     message,
   });
 };
+
+export default errorHandlingMiddleware;

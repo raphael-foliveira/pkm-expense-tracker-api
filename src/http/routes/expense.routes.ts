@@ -3,8 +3,8 @@ import { useHandler } from '../helpers/handler';
 import { AuthorizationSchema } from '../schemas/auth.schemas';
 import { IdParamSchema } from '../schemas/common';
 import { expenseController } from '../controller/expense.controller';
-import { validate } from '../middleware/validation.middleware';
-import { authMiddleware } from '../middleware/auth.middleware';
+import validate from '../middleware/validation.middleware';
+import authMiddleware from '../middleware/auth.middleware';
 import {
   CreateExpenseSchema,
   GetByMonthSchema,

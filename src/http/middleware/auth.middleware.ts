@@ -19,8 +19,11 @@ const checkApiKey: RequestHandler = async (
   { headers: { ['x-api-key']: apiKey } },
   res,
   next,
-) => {};
-
-export const authMiddleware = {
-  checkToken,
+) => {
+  if (apiKey !== process.env.API_KEY) {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
+  return next();
 };
+
+export default { checkToken, checkApiKey };

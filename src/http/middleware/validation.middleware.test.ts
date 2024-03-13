@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { validate } from './validation.middleware';
+import validate from './validation.middleware';
 import { Request, Response } from 'express';
 
 describe('validation', () => {

@@ -23,9 +23,4 @@ const secrets = {
   refreshToken: get('REFRESH_TOKEN_SECRET'),
 };
 
-export const config = {
-  get,
-  environment,
-  database,
-  secrets,
-};
+export default { get, environment, database, secrets };

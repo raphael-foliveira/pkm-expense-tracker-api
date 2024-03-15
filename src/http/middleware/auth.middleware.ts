@@ -1,5 +1,5 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { jwtService } from '../../service/jwt.service';
+import { RequestHandler } from 'express';
+import jwtService from '../../service/jwt.service';
 
 const checkToken: RequestHandler = async (
   { headers: { authorization } },
@@ -19,8 +19,11 @@ const checkApiKey: RequestHandler = async (
   { headers: { ['x-api-key']: apiKey } },
   res,
   next,
-) => {};
-
-export const authMiddleware = {
-  checkToken,
+) => {
+  if (apiKey !== process.env.API_KEY) {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
+  return next();
 };
+
+export default { checkToken, checkApiKey };

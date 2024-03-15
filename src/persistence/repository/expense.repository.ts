@@ -1,48 +1,36 @@
-import { GetByMonthProps } from '../../service/expense.service';
-import { dataSource } from '../data-source';
-import { Expense } from '../entitites/expense';
 import datefns from 'date-fns';
-import { User } from '../entitites/user';
+import { FindOneOptions, Repository } from 'typeorm';
+import { GetByMonthProps } from '../../service/expense.service';
+import dataSource from '../data-source';
+import { Expense } from '../entitites/expense';
+import { BaseRepository } from './base.repository';
 
-export const repository = dataSource.getRepository(Expense);
+class ExpenseRepository extends BaseRepository<Expense> {
+  constructor(repository: Repository<Expense>) {
+    super(repository);
+  }
 
-const save = (entity: Expense) => {
-  return repository.save(entity);
-};
+  findOneByIdWithUser(id: number) {
+    return this.repository.findOne({
+      where: { id },
+      relations: ['user'],
+    } as FindOneOptions);
+  }
 
-const findOneById = (id: number) => {
-  return repository.findOne({ where: { id }, relations: ['user'] }) as Promise<
-    (Expense & { user: User }) | null
-  >;
-};
+  async getByMonth({ month, year }: GetByMonthProps) {
+    const rangeStart = datefns.startOfMonth(new Date(year, month - 1));
+    const rangeEnd = datefns.addMonths(rangeStart, 1);
+    return this.repository
+      .createQueryBuilder('expense')
+      .where('expense.date > :rangeStart AND expense.date < :rangeEnd', {
+        rangeStart,
+        rangeEnd,
+      })
+      .innerJoinAndSelect('expense.user', 'user')
+      .getMany();
+  }
+}
 
-const find = (filter: Partial<Expense>) => {
-  return repository.find({ where: filter });
-};
-
-const remove = async (id: number) => {
-  const expense = await findOneById(id);
-  if (!expense) return null;
-  return repository.remove(expense);
-};
-
-const getByMonth = async ({ month, year }: GetByMonthProps) => {
-  const rangeStart = datefns.startOfMonth(new Date(year, month - 1));
-  const rangeEnd = datefns.addMonths(rangeStart, 1);
-  return repository
-    .createQueryBuilder('expense')
-    .where('expense.date > :rangeStart AND expense.date < :rangeEnd', {
-      rangeStart,
-      rangeEnd,
-    })
-    .innerJoinAndSelect('expense.user', 'user')
-    .getMany();
-};
-
-export const expenseRepository = {
-  save,
-  findOneById,
-  find,
-  remove,
-  getByMonth,
-};
+export const expenseRepository = new ExpenseRepository(
+  dataSource.getRepository(Expense),
+);

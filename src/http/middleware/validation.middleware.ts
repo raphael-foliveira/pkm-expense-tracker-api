@@ -20,9 +20,11 @@ const wrapValidation = (fn: ValidationFunction) => {
   };
 };
 
-export const validate = {
+const validate = {
   body: wrapValidation((r, s) => (r.body = s.parse(r.body))),
   queryString: wrapValidation((r, s) => (r.query = s.parse(r.query))),
   headers: wrapValidation((r, s) => (r.headers = s.parse(r.headers))),
   params: wrapValidation((r, s) => (r.params = s.parse(r.params))),
 };
+
+export default validate;

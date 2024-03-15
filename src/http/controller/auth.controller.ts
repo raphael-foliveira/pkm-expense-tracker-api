@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
-import { authService } from '../../service/auth.service';
+import authService from '../../service/auth.service';
 import { userMapper } from './mappers/user.mapper';
-import { userService } from '../../service/user.service';
+import userService from '../../service/user.service';
 
 const signup: RequestHandler = async ({ body }, res) => {
   const tokens = await authService.signup(body);

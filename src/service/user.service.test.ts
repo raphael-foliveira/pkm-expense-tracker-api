@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 config({ path: '.env.test' });
 
 import { mocks } from '../tests/mocks';
-import { userService } from './user.service';
+import userService from './user.service';
 import { userFactory } from '../tests/stubs/user';
 
 describe('UserService', () => {

@@ -1,4 +1,4 @@
-import { jwtService } from '../../../service/jwt.service';
+import jwtService from '../../../service/jwt.service';
 
 export const jwtServiceMock = (
   methodName: keyof typeof jwtService,

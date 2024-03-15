@@ -24,7 +24,7 @@ const update = async (id: number, expense: UpdateExpenseDto) => {
 };
 
 const findOne = async (id: number) => {
-  const expense = await expenseRepository.findOneById(id);
+  const expense = await expenseRepository.findOneByIdWithUser(id);
   if (!expense) {
     throw new NotFoundError('Expense not found');
   }
@@ -37,7 +37,7 @@ const find = (filter: Partial<Expense>) => {
 
 const remove = async (id: number, userId: number) => {
   const expenseToDelete = await findOne(id);
-  if (expenseToDelete.user.id !== userId) {
+  if (expenseToDelete.user?.id !== userId) {
     throw new ForbiddenError('This expense does not belong to this user');
   }
   return expenseRepository.remove(id);
@@ -60,11 +60,4 @@ const getByMonth = async (getByMonthProps: GetByMonthProps) => {
   return expenseRepository.getByMonth(getByMonthProps);
 };
 
-export const expenseService = {
-  create,
-  update,
-  findOne,
-  find,
-  remove,
-  getByMonth,
-};
+export default { create, update, findOne, find, remove, getByMonth };

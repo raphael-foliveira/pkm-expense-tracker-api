@@ -1,6 +1,6 @@
 import { mocks } from '../tests/mocks';
 import { expenseFactory } from '../tests/stubs/expense';
-import { expenseService } from './expense.service';
+import expenseService from './expense.service';
 
 describe('expenseService', () => {
   describe('update', () => {

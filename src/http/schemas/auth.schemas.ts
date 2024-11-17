@@ -25,7 +25,7 @@ export const AuthorizationSchema = z.object({
 });
 
 export const RefreshTokenSchema = z.object({
-  refreshToken: BearerTokenSchema,
+  refreshToken: z.string(),
 });
 
 export const ApiKeySchema = z.object({

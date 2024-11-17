@@ -108,7 +108,7 @@ describe('AuthController', () => {
 
       const { status, body } = await request
         .post('/auth/refresh-token')
-        .send({ refreshToken: `Bearer ${refreshToken}` });
+        .send({ refreshToken });
 
       expect(status).toBe(201);
       expect(body.accessToken).toBeDefined();
